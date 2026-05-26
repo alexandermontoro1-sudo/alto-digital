@@ -674,15 +674,12 @@
       background: linear-gradient(to bottom, transparent 50%, rgba(5,8,16,0.5) 100%);
       pointer-events: none;
     }
-    /* Gradient border using outline technique */
     .headshot-inner::before {
       content: '';
       position: absolute;
       inset: 0;
       border-radius: 12px;
-      border: 1px solid transparent;
-      background: linear-gradient(var(--bg), var(--bg)) padding-box,
-                  linear-gradient(135deg, rgba(37,99,235,0.5), transparent) border-box;
+      box-shadow: inset 0 0 0 1px rgba(37,99,235,0.35);
       z-index: 2;
       pointer-events: none;
     }
