@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Alto Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #080E1A;
+      --bg2:     #0D1628;
+      --blue:    #2563EB;
+      --blue-lt: #60A5FA;
+      --text:    #F1F5F9;
+      --muted:   #94A3B8;
+      --border:  rgba(255,255,255,0.07);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 60px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(5,8,16,0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .logo-badge { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+    .logo-badge img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 38%; mix-blend-mode: screen; }
+    .logo-wordmark { font-family: 'Barlow', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.12em; color: var(--text); line-height: 1; }
+    .logo-wordmark span { display: block; font-weight: 300; font-size: 10px; letter-spacing: 0.22em; color: var(--muted); margin-top: 2px; }
+    .nav-links { display: flex; align-items: center; gap: 36px; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 13px; font-weight: 500;
+      letter-spacing: 0.03em; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; border-radius: 6px;
+      font-size: 14px; font-weight: 600;
+      text-decoration: none; letter-spacing: 0.01em;
+      transition: background 0.2s, box-shadow 0.2s;
+      border: none; cursor: pointer;
+    }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover { background: #1d4ed8; box-shadow: 0 0 28px rgba(37,99,235,0.4); }
+
+    /* LAYOUT */
+    .contact-wrap {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 72px;
+    }
+
+    /* LEFT */
+    .contact-left {
+      padding: 100px 64px 80px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-left::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -20%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .cl-label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 20px;
+    }
+    .contact-left h1 {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 800;
+      font-size: clamp(48px, 6vw, 80px);
+      line-height: 0.97;
+      letter-spacing: -0.035em;
+      margin-bottom: 28px;
+    }
+    .cl-sub {
+      font-size: 17px; color: var(--muted);
+      line-height: 1.75; margin-bottom: 56px;
+      max-width: 380px;
+    }
+
+    .info-rows { display: flex; flex-direction: column; gap: 28px; }
+    .info-row { display: flex; flex-direction: column; gap: 4px; }
+    .info-lbl {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+    .info-val {
+      font-size: 15px; color: var(--text);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .info-val:hover { color: var(--blue-lt); }
+
+    /* RIGHT - FORM */
+    .contact-right {
+      padding: 100px 64px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-heading {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      margin-bottom: 40px;
+    }
+
+    .form-group { margin-bottom: 24px; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      padding: 14px 18px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.2); }
+    input:focus, textarea:focus, select:focus {
+      border-color: rgba(37,99,235,0.55);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+
+    textarea { resize: vertical; min-height: 140px; }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394A3B8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+    select option { background: #0D1628; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-top: 8px;
+      justify-content: center;
+    }
+
+    .form-note {
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    /* SUCCESS */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 60px 40px;
+      border: 1px solid rgba(37,99,235,0.3);
+      border-radius: 10px;
+      background: rgba(37,99,235,0.05);
+    }
+    .form-success.show { display: block; }
+    .form-success h3 {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 800;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .form-success p { color: var(--muted); font-size: 16px; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .foot-copy { font-size: 13px; color: rgba(255,255,255,0.25); }
+    .foot-email { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .foot-email:hover { color: var(--blue-lt); }
+
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links a:not(.btn) { display: none; }
+      .contact-wrap { grid-template-columns: 1fr; }
+      .contact-left {
+        padding: 100px 24px 60px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .contact-right { padding: 60px 24px 80px; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <div class="logo-badge"><img src="assets/logo-final.png" alt="Alto Digital"></div>
+      <div class="logo-wordmark">ALTO<span>DIGITAL</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="portfolio.html">Work</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#pricing">Pricing</a>
+      <a href="contact.html">Contact</a>
+      <a href="contact.html" class="btn btn-primary">Start a Project</a>
+    </div>
+  </nav>
+
+  <div class="contact-wrap">
+
+    <!-- LEFT: copy + info -->
+    <div class="contact-left">
+      <div class="cl-label">Contact</div>
+      <h1>Let's build<br>something.</h1>
+      <p class="cl-sub">Fill out the form and I'll get back to you within a few hours. No pressure, no sales pitch.</p>
+      <div class="info-rows">
+        <div class="info-row">
+          <span class="info-lbl">Email</span>
+          <a href="mailto:alexandermontoro1@gmail.com" class="info-val">alexandermontoro1@gmail.com</a>
+        </div>
+        <div class="info-row">
+          <span class="info-lbl">Turnaround</span>
+          <span class="info-val">48 hours from kickoff</span>
+        </div>
+        <div class="info-row">
+          <span class="info-lbl">Price</span>
+          <span class="info-val">$500 build &nbsp;&bull;&nbsp; $99/mo after</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: form -->
+    <div class="contact-right">
+      <div class="form-heading">Tell me about your business.</div>
+
+      <form id="contact-form" action="https://formspree.io/f/placeholder" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" placeholder="Jane Smith" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="jane@yourbusiness.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="business">Business Name</label>
+          <input type="text" id="business" name="business" placeholder="Your business name">
+        </div>
+
+        <div class="form-group">
+          <label for="service">What do you need?</label>
+          <select id="service" name="service">
+            <option value="">Select a service</option>
+            <option value="website">Website Design &amp; Build</option>
+            <option value="seo">Local SEO</option>
+            <option value="both">Website + SEO</option>
+            <option value="other">Something else</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Anything else I should know?</label>
+          <textarea id="message" name="message" placeholder="Tell me about your business, what you're looking for, any timeline..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary submit-btn">Send it &rarr;</button>
+        <p class="form-note">I'll respond within a few hours.</p>
+      </form>
+
+      <div class="form-success" id="form-success">
+        <h3>Got it.</h3>
+        <p>I'll get back to you within a few hours.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span class="foot-copy">&copy; 2026 Alto Digital</span>
+    <a href="mailto:alexandermontoro1@gmail.com" class="foot-email">alexandermontoro1@gmail.com</a>
+  </footer>
+
+  <script>
+    const form = document.getElementById('contact-form');
+    const success = document.getElementById('form-success');
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = new FormData(form);
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
+        if (res.ok) {
+          form.style.display = 'none';
+          success.classList.add('show');
+        } else {
+          window.location.href = 'mailto:alexandermontoro1@gmail.com';
+        }
+      } catch {
+        window.location.href = 'mailto:alexandermontoro1@gmail.com';
+      }
+    });
+  </script>
+
+</body>
+</html>

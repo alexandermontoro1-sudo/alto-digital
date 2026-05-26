@@ -1,0 +1,35 @@
+<svg width="820" height="260" viewBox="0 0 820 260" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;800&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- A-frame icon: outer triangle strokes -->
+  <line x1="110" y1="20"  x2="20"  y2="240" stroke="#2563EB" stroke-width="14" stroke-linecap="round"/>
+  <line x1="110" y1="20"  x2="200" y2="240" stroke="#2563EB" stroke-width="14" stroke-linecap="round"/>
+
+  <!-- A-frame icon: inner chevron -->
+  <line x1="110" y1="95"  x2="58"  y2="200" stroke="#2563EB" stroke-width="11" stroke-linecap="round"/>
+  <line x1="110" y1="95"  x2="162" y2="200" stroke="#2563EB" stroke-width="11" stroke-linecap="round"/>
+
+  <!-- ALTO text -->
+  <text
+    x="240" y="175"
+    font-family="'Barlow', 'Arial Black', 'Impact', sans-serif"
+    font-weight="800"
+    font-size="138"
+    letter-spacing="-2"
+    fill="#0D1B2A"
+  >ALTO</text>
+
+  <!-- DIGITAL text -->
+  <text
+    x="246" y="232"
+    font-family="'Barlow', 'Arial', sans-serif"
+    font-weight="300"
+    font-size="44"
+    letter-spacing="12"
+    fill="#0D1B2A"
+  >DIGITAL</text>
+</svg>
