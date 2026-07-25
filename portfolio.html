@@ -6,6 +6,8 @@
   <title>Work — Alto Digital</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
   <style>
     :root {
       --bg:      #080E1A;
@@ -19,6 +21,11 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+
+    .cursor-ring { position: fixed; top:0; left:0; width:34px; height:34px; border:1.5px solid rgba(96,165,250,0.55); border-radius:50%; pointer-events:none; z-index:9999; opacity:0; transition: width .25s ease, height .25s ease, background .25s, border-color .25s, opacity .3s; will-change: transform; }
+    .cursor-ring.show { opacity:1; }
+    .cursor-ring.hovering { width:58px; height:58px; background: rgba(37,99,235,0.12); border-color: rgba(96,165,250,0.95); }
+    @media (max-width: 960px) { .cursor-ring { display:none !important; } }
 
     body {
       background: var(--bg);
@@ -248,9 +255,9 @@
     <div class="nav-links">
       <a href="portfolio.html" class="active">Work</a>
       <a href="index.html#services">Services</a>
-      <a href="index.html#pricing">Pricing</a>
+      <a href="index.html#how">How It Works</a>
       <a href="contact.html">Contact</a>
-      <a href="contact.html" class="btn btn-primary">Start a Project</a>
+      <a href="https://calendly.com/altodigital/alto-digital-meeting" target="_blank" rel="noopener" class="btn btn-primary" onclick="if(window.Calendly){Calendly.initPopupWidget({url:this.href});return false;}">Book a Free Demo</a>
     </div>
   </nav>
 
@@ -263,34 +270,22 @@
   <section class="portfolio-sec">
     <div class="port-grid">
 
-      <!-- Dapper District -->
-      <a href="https://alexandermontoro1.github.io/dapper-district/" target="_blank" rel="noopener" class="port-card reveal">
-        <video class="port-thumb" src="assets/360_loop.mp4" autoplay muted loop playsinline></video>
+      <!-- Revive Home Remodeling -->
+      <a href="portfolio.html" class="port-card reveal">
+        <img class="port-thumb" src="assets/work/revive-home-remodeling.png" alt="Revive Home Remodeling website">
         <div class="port-meta">
           <div>
-            <div class="port-client">Dapper District</div>
-            <div class="port-tags">Website Design &nbsp;&bull;&nbsp; Barbershop &nbsp;&bull;&nbsp; Atlanta, GA</div>
+            <div class="port-client">Revive Home Remodeling</div>
+            <div class="port-tags">Website Design &nbsp;&bull;&nbsp; Fairfield County, CT</div>
           </div>
           <span class="port-badge">Live</span>
         </div>
       </a>
 
-      <!-- Placeholder 1 -->
+      <!-- Next client slot -->
       <div class="port-placeholder reveal reveal-delay-1">
         <div class="plus">+</div>
-        Next client
-      </div>
-
-      <!-- Placeholder 2 -->
-      <div class="port-placeholder reveal">
-        <div class="plus">+</div>
-        Coming soon
-      </div>
-
-      <!-- Placeholder 3 -->
-      <div class="port-placeholder reveal reveal-delay-1">
-        <div class="plus">+</div>
-        Coming soon
+        Your business here
       </div>
 
     </div>
@@ -299,15 +294,22 @@
     <div class="cta-strip reveal">
       <div>
         <h3>Want your site here?</h3>
-        <p>$500 to build. Live in 48 hours.</p>
+        <p>Custom sites. Live in 48 hours.</p>
       </div>
-      <a href="contact.html" class="btn btn-primary" style="font-size:15px;padding:14px 32px;white-space:nowrap;">Start a Project</a>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;">
+        <a href="contact.html" class="btn btn-primary" style="font-size:15px;padding:14px 32px;white-space:nowrap;">Start a Project</a>
+        <a href="https://calendly.com/altodigital/alto-digital-meeting" target="_blank" rel="noopener" class="btn" style="font-size:15px;padding:14px 32px;white-space:nowrap;border:1px solid var(--border);color:var(--text);" onclick="if(window.Calendly){Calendly.initPopupWidget({url:this.href});return false;}">Book a Free Demo</a>
+      </div>
     </div>
   </section>
 
   <footer>
     <span class="foot-copy">&copy; 2026 Alto Digital</span>
-    <a href="mailto:alexandermontoro1@gmail.com" class="foot-email">alexandermontoro1@gmail.com</a>
+    <span style="display:flex;gap:20px;">
+      <a href="privacy.html" class="foot-email">Privacy</a>
+      <a href="terms.html" class="foot-email">Terms</a>
+    </span>
+    <a href="mailto:altodigital@gmail.com" class="foot-email">altodigital@gmail.com</a>
   </footer>
 
   <script>
@@ -315,6 +317,20 @@
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('up'); obs.unobserve(e.target); } });
     }, { threshold: 0.08 });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  </script>
+
+  <script>
+    (function () {
+      if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+      const ring = document.createElement('div'); ring.className = 'cursor-ring'; document.body.appendChild(ring);
+      let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+      document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;ring.classList.add('show');});
+      document.addEventListener('mouseleave',()=>ring.classList.remove('show'));
+      const sel='a, button, .btn, input, textarea, select, [role="button"]';
+      document.addEventListener('mouseover',e=>{if(e.target.closest(sel))ring.classList.add('hovering');});
+      document.addEventListener('mouseout',e=>{if(e.target.closest(sel))ring.classList.remove('hovering');});
+      (function loop(){rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;ring.style.transform='translate('+rx+'px,'+ry+'px) translate(-50%,-50%)';requestAnimationFrame(loop);})();
+    })();
   </script>
 
 </body>

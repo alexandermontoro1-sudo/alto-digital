@@ -6,6 +6,8 @@
   <title>Contact — Alto Digital</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
   <style>
     :root {
       --bg:      #080E1A;
@@ -19,6 +21,11 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+
+    .cursor-ring { position: fixed; top:0; left:0; width:34px; height:34px; border:1.5px solid rgba(96,165,250,0.55); border-radius:50%; pointer-events:none; z-index:9999; opacity:0; transition: width .25s ease, height .25s ease, background .25s, border-color .25s, opacity .3s; will-change: transform; }
+    .cursor-ring.show { opacity:1; }
+    .cursor-ring.hovering { width:58px; height:58px; background: rgba(37,99,235,0.12); border-color: rgba(96,165,250,0.95); }
+    @media (max-width: 960px) { .cursor-ring { display:none !important; } }
 
     body {
       background: var(--bg);
@@ -144,6 +151,14 @@
 
     .form-group { margin-bottom: 24px; }
 
+    .book-back {
+      background: none; border: none; padding: 0;
+      color: var(--muted); font-family: 'Inter', sans-serif; font-size: 13px;
+      letter-spacing: 0.02em; cursor: pointer; margin-bottom: 22px;
+      transition: color 0.2s;
+    }
+    .book-back:hover { color: var(--text); }
+
     label {
       display: block;
       font-size: 12px;
@@ -263,9 +278,9 @@
     <div class="nav-links">
       <a href="portfolio.html">Work</a>
       <a href="index.html#services">Services</a>
-      <a href="index.html#pricing">Pricing</a>
+      <a href="index.html#how">How It Works</a>
       <a href="contact.html">Contact</a>
-      <a href="contact.html" class="btn btn-primary">Start a Project</a>
+      <a href="https://calendly.com/altodigital/alto-digital-meeting" target="_blank" rel="noopener" class="btn btn-primary" onclick="if(window.Calendly){Calendly.initPopupWidget({url:this.href});return false;}">Book a Free Demo</a>
     </div>
   </nav>
 
@@ -273,97 +288,149 @@
 
     <!-- LEFT: copy + info -->
     <div class="contact-left">
-      <div class="cl-label">Contact</div>
+      <div class="cl-label">Book a Free Demo</div>
       <h1>Let's build<br>something.</h1>
-      <p class="cl-sub">Fill out the form and I'll get back to you within a few hours. No pressure, no sales pitch.</p>
+      <p class="cl-sub">Grab a time that works, tell me a bit about your business, and we'll talk. No pressure, no pitch.</p>
       <div class="info-rows">
         <div class="info-row">
           <span class="info-lbl">Email</span>
-          <a href="mailto:alexandermontoro1@gmail.com" class="info-val">alexandermontoro1@gmail.com</a>
+          <a href="mailto:altodigital@gmail.com" class="info-val">altodigital@gmail.com</a>
+        </div>
+        <div class="info-row">
+          <span class="info-lbl">Phone</span>
+          <a href="tel:4702613445" class="info-val">470-261-3445</a>
         </div>
         <div class="info-row">
           <span class="info-lbl">Turnaround</span>
           <span class="info-val">48 hours from kickoff</span>
         </div>
-        <div class="info-row">
-          <span class="info-lbl">Price</span>
-          <span class="info-val">$500 build &nbsp;&bull;&nbsp; $99/mo after</span>
-        </div>
       </div>
     </div>
 
-    <!-- RIGHT: form -->
+    <!-- RIGHT: 2-step booking (questions -> availability) -->
     <div class="contact-right">
-      <div class="form-heading">Tell me about your business.</div>
 
-      <form id="contact-form" action="https://formspree.io/f/placeholder" method="POST">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name">Your Name</label>
-            <input type="text" id="name" name="name" placeholder="Jane Smith" required>
+      <!-- Step 1: a few quick questions -->
+      <div id="book-step1">
+        <div class="form-heading">First, a few quick questions.</div>
+        <form id="qual-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="q-name">Your Name</label>
+              <input type="text" id="q-name" placeholder="Jane Smith" required>
+            </div>
+            <div class="form-group">
+              <label for="q-email">Email Address</label>
+              <input type="email" id="q-email" placeholder="jane@yourbusiness.com" required>
+            </div>
           </div>
           <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="jane@yourbusiness.com" required>
+            <label for="q-business">Business Name</label>
+            <input type="text" id="q-business" placeholder="Your business name">
           </div>
-        </div>
-
-        <div class="form-group">
-          <label for="business">Business Name</label>
-          <input type="text" id="business" name="business" placeholder="Your business name">
-        </div>
-
-        <div class="form-group">
-          <label for="service">What do you need?</label>
-          <select id="service" name="service">
-            <option value="">Select a service</option>
-            <option value="website">Website Design &amp; Build</option>
-            <option value="seo">Local SEO</option>
-            <option value="both">Website + SEO</option>
-            <option value="other">Something else</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="message">Anything else I should know?</label>
-          <textarea id="message" name="message" placeholder="Tell me about your business, what you're looking for, any timeline..."></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary submit-btn">Send it &rarr;</button>
-        <p class="form-note">I'll respond within a few hours.</p>
-      </form>
-
-      <div class="form-success" id="form-success">
-        <h3>Got it.</h3>
-        <p>I'll get back to you within a few hours.</p>
+          <div class="form-group">
+            <label for="q-need">What do you need?</label>
+            <select id="q-need">
+              <option value="">Select a service</option>
+              <option>Website</option>
+              <option>Local SEO &amp; Google</option>
+              <option>Website + SEO</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="q-msg">Anything else I should know?</label>
+            <textarea id="q-msg" placeholder="A bit about your business, what you're after, any timeline..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary submit-btn">Continue to scheduling &rarr;</button>
+          <p class="form-note">Next: pick a time that works for you.</p>
+        </form>
       </div>
+
+      <!-- Step 2: pick a time -->
+      <div id="book-step2" style="display:none;">
+        <button type="button" id="book-back" class="book-back">&larr; Edit answers</button>
+        <div id="cal-embed" style="min-width:320px;height:660px;"></div>
+      </div>
+
     </div>
 
   </div>
 
   <footer>
     <span class="foot-copy">&copy; 2026 Alto Digital</span>
-    <a href="mailto:alexandermontoro1@gmail.com" class="foot-email">alexandermontoro1@gmail.com</a>
+    <span style="display:flex;gap:20px;">
+      <a href="privacy.html" class="foot-email">Privacy</a>
+      <a href="terms.html" class="foot-email">Terms</a>
+    </span>
+    <a href="mailto:altodigital@gmail.com" class="foot-email">altodigital@gmail.com</a>
   </footer>
 
   <script>
-    const form = document.getElementById('contact-form');
-    const success = document.getElementById('form-success');
+    // 2-step booking: collect answers, then reveal Calendly with details prefilled
+    (function () {
+      const form = document.getElementById('qual-form');
+      if (!form) return;
+      const step1 = document.getElementById('book-step1');
+      const step2 = document.getElementById('book-step2');
+      const back  = document.getElementById('book-back');
+      const embed = document.getElementById('cal-embed');
+      const CAL_URL = 'https://calendly.com/altodigital/alto-digital-meeting?hide_gdpr_banner=1';
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const name     = form.querySelector('#name').value.trim();
-      const email    = form.querySelector('#email').value.trim();
-      const business = form.querySelector('#business').value.trim();
-      const service  = form.querySelector('#service').value;
-      const message  = form.querySelector('#message').value.trim();
-      const body = encodeURIComponent(
-        `Name: ${name}\nEmail: ${email}\nBusiness: ${business}\nService: ${service}\n\n${message}`
-      );
-      window.location.href = `mailto:alexandermontoro1@gmail.com?subject=New%20Project%20Inquiry%20from%20${encodeURIComponent(name)}&body=${body}`;
-      form.style.display = 'none';
-      success.classList.add('show');
-    });
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name     = document.getElementById('q-name').value.trim();
+        const email    = document.getElementById('q-email').value.trim();
+        const business = document.getElementById('q-business').value.trim();
+        const need     = document.getElementById('q-need').value;
+        const msg      = document.getElementById('q-msg').value.trim();
+
+        step1.style.display = 'none';
+        step2.style.display = 'block';
+        embed.innerHTML = '';
+
+        if (window.Calendly) {
+          // a1/a2/a3/a4 map to Calendly's custom questions BY POSITION:
+          //   a1 = "What's your business called?"
+          //   a2 = "Do you have a website right now?"  (asked in Calendly, not here)
+          //   a3 = "What do you want to fix first?"
+          //   a4 = "Anything else?"  (optional; ignored if that question does not exist)
+          // Radio answers only prefill when the string matches an option exactly.
+          Calendly.initInlineWidget({
+            url: CAL_URL,
+            parentElement: embed,
+            prefill: {
+              name: name,
+              email: email,
+              customAnswers: { a1: business, a3: need, a4: msg }
+            }
+          });
+        } else {
+          window.open(CAL_URL, '_blank', 'noopener');
+        }
+        step2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      back.addEventListener('click', function () {
+        step2.style.display = 'none';
+        step1.style.display = 'block';
+        embed.innerHTML = '';
+      });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+      const ring = document.createElement('div'); ring.className = 'cursor-ring'; document.body.appendChild(ring);
+      let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+      document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;ring.classList.add('show');});
+      document.addEventListener('mouseleave',()=>ring.classList.remove('show'));
+      const sel='a, button, .btn, input, textarea, select, [role="button"]';
+      document.addEventListener('mouseover',e=>{if(e.target.closest(sel))ring.classList.add('hovering');});
+      document.addEventListener('mouseout',e=>{if(e.target.closest(sel))ring.classList.remove('hovering');});
+      (function loop(){rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;ring.style.transform='translate('+rx+'px,'+ry+'px) translate(-50%,-50%)';requestAnimationFrame(loop);})();
+    })();
   </script>
 
 </body>

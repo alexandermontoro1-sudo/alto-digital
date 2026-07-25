@@ -6,6 +6,9 @@
   <title>Alto Digital — Web Design for Small Businesses</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,800;1,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:ital,wght@0,600;0,700;1,600;1,700&family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@600;700&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
   <style>
     :root {
       --bg:       #050810;
@@ -29,6 +32,26 @@
       line-height: 1.6;
       overflow-x: hidden;
     }
+
+    /* ── CURSOR RING ── */
+    .cursor-ring {
+      position: fixed; top: 0; left: 0;
+      width: 34px; height: 34px;
+      border: 1.5px solid rgba(96,165,250,0.55);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0;
+      transition: width .25s ease, height .25s ease, background .25s, border-color .25s, opacity .3s;
+      will-change: transform;
+    }
+    .cursor-ring.show { opacity: 1; }
+    .cursor-ring.hovering {
+      width: 58px; height: 58px;
+      background: rgba(37,99,235,0.12);
+      border-color: rgba(96,165,250,0.95);
+    }
+    @media (max-width: 960px) { .cursor-ring { display: none !important; } }
 
     /* ── ANIMATED BACKGROUND ── */
     .bg-canvas {
@@ -92,7 +115,7 @@
     }
 
     /* Everything sits above bg */
-    nav, main, section, header, footer, .stats-bar, .marquee-wrap { position: relative; z-index: 1; }
+    nav, main, section, header, footer, .stats-bar, .logos-wrap { position: relative; z-index: 1; }
 
     /* ── NAV ── */
     nav {
@@ -191,13 +214,54 @@
     /* ── HERO ── */
     .hero {
       min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 48px;
-      padding: 100px 60px 80px;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 90px;
       position: relative;
+      z-index: 1;
     }
+
+    /* hero spiral animation canvas */
+    #hero-spiral {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* fade the spiral into the page at the bottom edge */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(to bottom, transparent 55%, var(--bg) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 680px;
+    }
+    /* dark halo keeps text legible over the bright spiral core */
+    .hero-content::before {
+      content: '';
+      position: absolute;
+      inset: -60px -90px;
+      z-index: -1;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, rgba(5,8,16,0.80) 0%, rgba(5,8,16,0.45) 45%, transparent 75%);
+    }
+    .hero-content h1 { text-shadow: 0 2px 40px rgba(5,8,16,0.9); }
+    .hero-content .hero-sub { margin-left: auto; margin-right: auto; text-shadow: 0 1px 20px rgba(5,8,16,0.85); }
+    .hero-content .hero-actions { justify-content: center; }
 
     .hero-eyebrow {
       display: inline-flex;
@@ -345,13 +409,13 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     }
     .badge-float-1 {
-      bottom: -16px;
-      left: -24px;
+      bottom: 16px;
+      left: -86px;
       animation: floatBadge 3s ease-in-out infinite;
     }
     .badge-float-2 {
-      top: 24px;
-      right: -24px;
+      top: 16px;
+      right: -86px;
       animation: floatBadge 3.5s ease-in-out infinite 0.5s;
     }
     @keyframes floatBadge {
@@ -379,42 +443,60 @@
     }
     .badge-icon { font-size: 16px; }
 
-    /* ── MARQUEE ── */
-    .marquee-wrap {
-      overflow: hidden;
+    /* ── LOGO MARQUEE ── */
+    .logos-wrap {
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      padding: 14px 0;
+      padding: 30px 0 34px;
       background: rgba(255,255,255,0.015);
     }
-    .marquee-track {
+    .logos-label {
+      text-align: center;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 26px;
+    }
+    .logos-viewport {
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    }
+    .logos-track {
       display: flex;
-      gap: 0;
-      animation: marqueeScroll 25s linear infinite;
-      white-space: nowrap;
-      width: max-content;
-    }
-    .marquee-track:hover { animation-play-state: paused; }
-    .marquee-item {
-      display: inline-flex;
       align-items: center;
-      gap: 32px;
-      padding: 0 32px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
+      gap: 68px;
+      width: max-content;
+      animation: logosScroll 40s linear infinite;
     }
-    .marquee-item .sep {
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: var(--blue);
-      flex-shrink: 0;
-    }
-    @keyframes marqueeScroll {
+    @keyframes logosScroll {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 12px;
+      color: #AEBBD0; opacity: 0.72;
+      flex-shrink: 0; white-space: nowrap;
+    }
+    .brand svg {
+      width: 27px; height: 27px; flex-shrink: 0;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .brand-name { font-size: 22px; line-height: 1; letter-spacing: -0.01em; }
+    .lg-serif    { font-family: 'Playfair Display', serif; font-weight: 700; }
+    .lg-serif-it { font-family: 'Playfair Display', serif; font-weight: 700; font-style: italic; letter-spacing: 0; }
+    .lg-cond     { font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 19px; }
+    .lg-cond-it  { font-family: 'Oswald', sans-serif; font-weight: 700; font-style: italic; text-transform: uppercase; letter-spacing: 0.05em; font-size: 19px; }
+    .lg-geo      { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 20px; }
+    .lg-geo-caps { font-family: 'Poppins', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; font-size: 16px; }
+    .lg-round    { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 21px; }
+    @media (max-width: 700px) {
+      .logos-track { gap: 46px; animation-duration: 32s; }
+      .brand-name { font-size: 18px; }
+      .lg-cond, .lg-cond-it { font-size: 16px; }
+      .lg-geo { font-size: 17px; }
+      .lg-geo-caps { font-size: 14px; }
+      .brand svg { width: 22px; height: 22px; }
     }
 
     /* ── STATS ── */
@@ -456,6 +538,70 @@
     .stat-sub  { font-size: 24px; color: var(--muted); font-weight: 600; }
     .stat-lbl  { font-size: 13px; color: var(--muted); margin-top: 8px; letter-spacing: 0.02em; }
 
+    /* ── GUIDED BOOKING ── */
+    .book-sec {
+      padding: 100px 60px;
+      background: rgba(255,255,255,0.015);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative; z-index: 1;
+    }
+    .book-head { text-align: center; max-width: 620px; margin: 0 auto 44px; }
+    .book-head h2 { margin-bottom: 14px; }
+    .book-head p { color: var(--muted); font-size: 17px; line-height: 1.7; }
+    .book-card {
+      max-width: 600px; margin: 0 auto;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 46px;
+      min-height: 300px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .book-progress { display: flex; align-items: center; gap: 16px; margin-bottom: 34px; }
+    #book-step-label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+    .book-bar { flex: 1; height: 3px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+    .book-bar-fill { height: 100%; width: 25%; background: var(--blue); border-radius: 3px; transition: width 0.4s cubic-bezier(0.16,1,0.3,1); }
+    .book-q { display: flex; flex-direction: column; gap: 22px; animation: bookIn 0.4s ease; }
+    .book-q[hidden] { display: none; }
+    @keyframes bookIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    .book-qlabel { font-family: 'Barlow', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.02em; line-height: 1.1; }
+    .book-input {
+      width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 18px; padding: 16px 18px; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .book-input:focus { border-color: rgba(37,99,235,0.55); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+    .book-input::placeholder { color: rgba(255,255,255,0.25); }
+    .book-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .book-opt {
+      text-align: left; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500; padding: 18px 20px; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+    .book-opt:hover { border-color: rgba(37,99,235,0.5); background: rgba(37,99,235,0.08); transform: translateY(-2px); }
+    .book-actions { display: flex; align-items: center; gap: 18px; margin-top: 6px; }
+    .book-back2 { background: none; border: none; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 14px; cursor: pointer; padding: 0; transition: color 0.2s; }
+    .book-back2:hover { color: var(--text); }
+    .book-done { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+    .book-done-title { font-family: 'Barlow', sans-serif; font-weight: 800; font-size: 30px; letter-spacing: -0.02em; }
+    .book-done-sub { color: var(--muted); font-size: 17px; line-height: 1.7; }
+    .book-hint { font-size: 13px; color: var(--muted); margin-top: -8px; line-height: 1.6; }
+    .book-opt-tag {
+      font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue-lt);
+      background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.25);
+      padding: 3px 8px; border-radius: 20px; vertical-align: middle; margin-left: 8px;
+    }
+    .book-skip { background: none; border: none; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 14px; cursor: pointer; padding: 0; margin-left: auto; transition: color 0.2s; }
+    .book-skip:hover { color: var(--text); }
+    @media (max-width: 640px) {
+      .book-sec { padding: 72px 24px; }
+      .book-card { padding: 32px 24px; }
+      .book-qlabel { font-size: 23px; }
+      .book-opts { grid-template-columns: 1fr; }
+    }
+
     /* ── SECTIONS ── */
     .sec { padding: 120px 60px; }
     .sec-alt { background: rgba(255,255,255,0.015); }
@@ -484,51 +630,42 @@
       margin-bottom: 64px;
     }
 
-    /* ── SERVICES ── */
-    .svc-grid {
+    /* ── SERVICES (editorial rows) ── */
+    .svc-list { border-top: 1px solid var(--border); }
+    .svc-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      grid-template-columns: 140px 1fr;
+      gap: 48px;
+      padding: 48px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: baseline;
+      transition: padding-left 0.35s cubic-bezier(0.16,1,0.3,1);
     }
-    .svc {
-      background: var(--glass);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 52px 48px;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.3s, background 0.3s;
-      cursor: default;
-    }
-    .svc::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      background: radial-gradient(ellipse at 0% 0%, rgba(37,99,235,0.12), transparent 60%);
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-    .svc:hover { border-color: rgba(37,99,235,0.35); background: rgba(37,99,235,0.04); }
-    .svc:hover::before { opacity: 1; }
-
-    .svc-num {
+    .svc-row:hover { padding-left: 14px; }
+    .svc-row-num {
       font-family: 'Barlow', sans-serif;
       font-weight: 800;
-      font-size: 12px;
-      color: var(--blue);
-      letter-spacing: 0.18em;
-      margin-bottom: 28px;
+      font-size: 60px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: rgba(96,165,250,0.35);
+      transition: color 0.3s;
     }
-    .svc-title {
+    .svc-row:hover .svc-row-num { color: var(--blue-lt); }
+    .svc-row-title {
       font-family: 'Barlow', sans-serif;
       font-weight: 800;
       font-size: 28px;
       letter-spacing: -0.02em;
       line-height: 1.1;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
-    .svc-desc { font-size: 15px; color: var(--muted); line-height: 1.8; max-width: 340px; }
+    .svc-row-desc { font-size: 16px; color: var(--muted); line-height: 1.8; max-width: 640px; }
+    @media (max-width: 700px) {
+      .svc-row { grid-template-columns: 1fr; gap: 10px; padding: 34px 0; }
+      .svc-row:hover { padding-left: 0; }
+      .svc-row-num { font-size: 40px; }
+    }
 
     /* ── WORK ── */
     .work-grid {
@@ -609,93 +746,86 @@
       font-size: 20px;
     }
 
-    /* ── PRICING ── */
-    .pricing-grid {
+    .work-badge.demo { color: var(--muted); background: rgba(255,255,255,0.05); border-color: var(--border); }
+
+    /* featured work split */
+    .work-feature {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      max-width: 740px;
-    }
-    .price-card {
-      border-radius: 16px;
-      padding: 44px 40px;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      background: var(--glass);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .price-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
-
-    /* Gradient border on featured card */
-    .price-card.featured {
-      background: linear-gradient(var(--bg), var(--bg)) padding-box,
-                  linear-gradient(135deg, #2563EB, #818CF8) border-box;
-      border: 1px solid transparent;
-    }
-    .price-card.featured::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 100% 0%, rgba(37,99,235,0.1), transparent 60%);
-      pointer-events: none;
-    }
-
-    .price-amount {
-      font-family: 'Barlow', sans-serif;
-      font-weight: 800;
-      font-size: 64px;
-      line-height: 1;
-      letter-spacing: -0.04em;
-    }
-    .price-period { font-size: 13px; color: var(--muted); margin-top: 4px; margin-bottom: 28px; }
-    .price-name { font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em; margin-bottom: 10px; }
-    .price-desc { font-size: 14px; color: var(--muted); line-height: 1.75; }
-
-    /* ── ABOUT ── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 100px;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 56px;
       align-items: center;
     }
-    .about-text h2 { margin-bottom: 20px; }
-    .about-body { font-size: 18px; color: var(--muted); line-height: 1.85; margin-bottom: 36px; }
-
-    .headshot-wrap {
-      position: relative;
-    }
-    .headshot-inner {
-      border-radius: 12px;
-      overflow: hidden;
-      width: 100%;
-      aspect-ratio: 1/1;
-      position: relative;
-    }
-    .headshot-inner img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: 50% 10%;
+    .work-feature-img {
       display: block;
-      filter: contrast(1.05) brightness(1.05) saturate(0.8);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      transition: transform 0.4s, box-shadow 0.4s, border-color 0.3s;
     }
-    .headshot-inner::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, transparent 50%, rgba(5,8,16,0.5) 100%);
-      pointer-events: none;
+    .work-feature-img:hover {
+      transform: translateY(-6px);
+      border-color: rgba(37,99,235,0.4);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 50px rgba(37,99,235,0.12);
     }
-    .headshot-inner::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 12px;
-      box-shadow: inset 0 0 0 1px rgba(37,99,235,0.35);
-      z-index: 2;
-      pointer-events: none;
+    .work-feature-img img {
+      width: 100%; display: block;
+      aspect-ratio: 16/10; object-fit: cover; object-position: top;
+      filter: brightness(0.92);
+      transition: filter 0.3s;
     }
+    .work-feature-img:hover img { filter: brightness(1); }
+    .work-feature-body .work-badge { display: inline-block; margin-bottom: 22px; }
+    .work-feature-title {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 800; font-size: 32px;
+      letter-spacing: -0.02em; line-height: 1.05;
+      margin-bottom: 8px;
+    }
+    .work-feature-meta { font-size: 13px; color: var(--muted); letter-spacing: 0.03em; margin-bottom: 22px; }
+    .work-feature-desc { font-size: 16px; color: var(--muted); line-height: 1.8; max-width: 460px; margin-bottom: 28px; }
+    .work-feature-link {
+      font-family: 'Barlow', sans-serif; font-weight: 700;
+      font-size: 15px; color: var(--blue-lt); text-decoration: none;
+      letter-spacing: 0.01em; transition: color 0.2s;
+    }
+    .work-feature-link:hover { color: var(--text); }
+    @media (max-width: 900px) {
+      .work-feature { grid-template-columns: 1fr; gap: 28px; }
+      .work-feature-desc { max-width: 100%; }
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .step {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 44px 38px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .step:hover { border-color: rgba(37,99,235,0.4); transform: translateY(-6px); }
+    .step-line { position: absolute; top: 0; left: 0; height: 3px; width: 100%; background: linear-gradient(90deg, var(--blue), transparent); opacity: 0.55; }
+    .step-num {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 800; font-size: 14px;
+      letter-spacing: 0.16em; color: var(--blue-lt);
+      margin: 6px 0 22px;
+    }
+    .step-title {
+      font-family: 'Barlow', sans-serif;
+      font-weight: 800; font-size: 24px;
+      letter-spacing: -0.01em; line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    .step-desc { font-size: 15px; color: var(--muted); line-height: 1.8; }
+
 
     /* ── CTA ── */
     .cta-sec {
@@ -747,18 +877,45 @@
     .btn-cta-big:hover::before { opacity: 1; }
 
     /* ── FOOTER ── */
-    footer {
+    .site-footer {
+      display: block;
       border-top: 1px solid var(--border);
-      padding: 32px 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 76px 60px 40px;
+      background: rgba(255,255,255,0.012);
       position: relative;
       z-index: 1;
     }
-    .foot-copy { font-size: 13px; color: rgba(255,255,255,0.2); }
-    .foot-email { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
-    .foot-email:hover { color: var(--blue-lt); }
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 56px;
+      max-width: 1200px;
+      margin: 0 auto 52px;
+    }
+    .foot-brand { max-width: 400px; }
+    .foot-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+    .foot-logo-badge { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+    .foot-logo-badge img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 38%; mix-blend-mode: screen; }
+    .foot-word { font-family: 'Barlow', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.12em; line-height: 1; color: var(--text); }
+    .foot-word span { display: block; font-weight: 300; font-size: 10px; letter-spacing: 0.22em; color: var(--muted); margin-top: 2px; }
+    .foot-tagline { font-size: 15px; color: var(--muted); line-height: 1.8; }
+    .foot-col { display: flex; flex-direction: column; gap: 14px; }
+    .foot-h { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
+    .foot-col a { font-size: 15px; color: var(--muted); text-decoration: none; transition: color 0.2s; width: fit-content; }
+    .foot-col a:hover { color: var(--text); }
+    .foot-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 26px;
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: 13px;
+      color: rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .foot-legal { display: flex; gap: 24px; }
+    .foot-legal a { color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+    .foot-legal a:hover { color: var(--text); }
 
     /* ── REVEAL ── */
     .reveal {
@@ -774,21 +931,22 @@
     @media (max-width: 960px) {
       nav { padding: 0 24px; }
       .nav-links a:not(.btn) { display: none; }
-      .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; min-height: auto; }
-      .hero-right { display: none; }
+      .hero { padding: 110px 20px 70px; min-height: 92vh; }
+      .hero-orb { width: 220px; height: 220px; margin-bottom: 8px; }
+      .orb-logo { width: 200px; }
+      .badge-float { display: none; }
       h1 { font-size: clamp(44px, 11vw, 60px); }
       .stats-bar { grid-template-columns: 1fr 1fr; }
       .stat { padding: 28px 24px; }
       .stat:nth-child(2) { border-right: none; }
       .stat:nth-child(3) { grid-column: span 2; border-top: 1px solid var(--border); border-right: none; }
       .sec { padding: 80px 24px; }
-      .svc-grid, .work-grid, .pricing-grid { grid-template-columns: 1fr; max-width: 100%; }
+      .svc-grid, .work-grid, .steps-grid { grid-template-columns: 1fr; max-width: 100%; }
       .svc { padding: 36px 28px; }
       .work-placeholder { display: none; }
-      .about-grid { grid-template-columns: 1fr; gap: 44px; }
-      .headshot-inner { max-width: 300px; }
       .cta-sec { padding: 100px 24px; }
-      footer { flex-direction: column; gap: 10px; text-align: center; padding: 28px 24px; }
+      .site-footer { padding: 56px 24px 32px; }
+      .foot-grid { grid-template-columns: 1fr; gap: 36px; }
     }
   </style>
 </head>
@@ -814,184 +972,225 @@
       </div>
     </a>
     <div class="nav-links">
-      <a href="portfolio.html">Work</a>
+      <a href="#work">Work</a>
       <a href="#services">Services</a>
-      <a href="#pricing">Pricing</a>
+      <a href="#how">How It Works</a>
       <a href="contact.html">Contact</a>
-      <a href="contact.html" class="btn btn-primary">Start a Project</a>
+      <a href="#book" class="btn btn-primary">Book a Free Demo</a>
     </div>
   </nav>
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-left">
+    <canvas id="hero-spiral"></canvas>
+
+    <div class="hero-content">
       <div class="hero-eyebrow">
         <div class="hero-eyebrow-dot"></div>
-        Web Design for Small Businesses
+        Digital Growth Partner &middot; Local Service Businesses
       </div>
-      <h1>Sites That Get<br>You <span class="grad">Hired.</span></h1>
-      <p class="hero-sub">Custom websites for local businesses. Built in 48 hours. Priced so it's an easy yes.</p>
+      <h1>Built for local.<br>Built to <span class="grad">convert.</span></h1>
+      <p class="hero-sub">We build the digital infrastructure that gets local service businesses found, called, and booked.</p>
       <div class="hero-actions">
-        <a href="contact.html" class="btn btn-primary">Start a Project</a>
-        <a href="portfolio.html" class="btn btn-ghost">See the Work</a>
-      </div>
-    </div>
-
-    <div class="hero-right">
-      <div class="mockup-glow"></div>
-
-      <div class="badge-float badge-float-1">
-        <span class="badge-dot-green"></span>
-        Live in 48 hours
-      </div>
-
-      <div class="mockup-wrap">
-        <div class="mock-bar">
-          <div class="mock-dots"><span></span><span></span><span></span></div>
-          <div class="mock-url">dapperdistrict.co</div>
-        </div>
-        <img class="mock-screen" src="assets/dapper-district.png" alt="Dapper District">
-      </div>
-
-      <div class="badge-float badge-float-2">
-        <span class="badge-icon">⚡</span>
-        $500 flat fee
+        <a href="#book" class="btn btn-primary">Book a Free Demo</a>
+        <a href="#work" class="btn btn-ghost">See Our Work</a>
       </div>
     </div>
   </section>
 
-  <!-- MARQUEE -->
-  <div class="marquee-wrap">
-    <div class="marquee-track">
-      <!-- First copy -->
-      <div class="marquee-item">Website Design <span class="sep"></span></div>
-      <div class="marquee-item">Local SEO <span class="sep"></span></div>
-      <div class="marquee-item">48hr Turnaround <span class="sep"></span></div>
-      <div class="marquee-item">$500 Build Fee <span class="sep"></span></div>
-      <div class="marquee-item">Custom Code <span class="sep"></span></div>
-      <div class="marquee-item">Mobile Optimized <span class="sep"></span></div>
-      <div class="marquee-item">No Templates <span class="sep"></span></div>
-      <div class="marquee-item">$99/mo Retainer <span class="sep"></span></div>
-      <!-- Duplicate for seamless loop -->
-      <div class="marquee-item">Website Design <span class="sep"></span></div>
-      <div class="marquee-item">Local SEO <span class="sep"></span></div>
-      <div class="marquee-item">48hr Turnaround <span class="sep"></span></div>
-      <div class="marquee-item">$500 Build Fee <span class="sep"></span></div>
-      <div class="marquee-item">Custom Code <span class="sep"></span></div>
-      <div class="marquee-item">Mobile Optimized <span class="sep"></span></div>
-      <div class="marquee-item">No Templates <span class="sep"></span></div>
-      <div class="marquee-item">$99/mo Retainer <span class="sep"></span></div>
+  <!-- LOGO MARQUEE -->
+  <div class="logos-wrap">
+    <p class="logos-label">Businesses we've built for</p>
+    <div class="logos-viewport">
+      <div class="logos-track">
+        <!-- set A -->
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5.5 9.7V19h13V9.7"/></svg><span class="brand-name lg-serif">Bluestone Realty</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 18l5-8 4 5 3-4 6 7z"/></svg><span class="brand-name lg-cond-it">Apex Fitness</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M5 19C5 11 11 5 19 5c0 8-6 14-14 14z"/><path d="M6.5 17.5C10 14 13.5 10.5 16.5 8.5"/></svg><span class="brand-name lg-round">Verde Landscaping</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 13c2.5-3 5 3 7.5 0S15.5 10 18 13"/><path d="M3 17c2.5-3 5 3 7.5 0S15.5 14 18 17"/></svg><span class="brand-name lg-geo-caps">Coastal Auto</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v6c0 4-3.5 6.5-8 8-4.5-1.5-8-4-8-8V7z"/></svg><span class="brand-name lg-cond">Ironclad Roofing</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M7 12h10"/></svg><span class="brand-name lg-geo">Northwind HVAC</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M12 21V9"/><path d="M12 9C8.8 9 7.5 6 7.5 3.5 10.7 3.5 12 6.5 12 9z"/><path d="M12 9c3.2 0 4.5-3 4.5-5.5C13.3 3.5 12 6.5 12 9z"/></svg><span class="brand-name lg-round">Maple &amp; Co.</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M7 3v6a2 2 0 004 0V3M9 11v10"/><path d="M16 3c-1.6 0-2.5 2-2.5 4.5S15 12 16 12v9"/></svg><span class="brand-name lg-serif-it">Harbor &amp; Vine</span></span>
+        <!-- set A duplicate (seamless loop) -->
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5.5 9.7V19h13V9.7"/></svg><span class="brand-name lg-serif">Bluestone Realty</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 18l5-8 4 5 3-4 6 7z"/></svg><span class="brand-name lg-cond-it">Apex Fitness</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M5 19C5 11 11 5 19 5c0 8-6 14-14 14z"/><path d="M6.5 17.5C10 14 13.5 10.5 16.5 8.5"/></svg><span class="brand-name lg-round">Verde Landscaping</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 13c2.5-3 5 3 7.5 0S15.5 10 18 13"/><path d="M3 17c2.5-3 5 3 7.5 0S15.5 14 18 17"/></svg><span class="brand-name lg-geo-caps">Coastal Auto</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v6c0 4-3.5 6.5-8 8-4.5-1.5-8-4-8-8V7z"/></svg><span class="brand-name lg-cond">Ironclad Roofing</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M7 12h10"/></svg><span class="brand-name lg-geo">Northwind HVAC</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M12 21V9"/><path d="M12 9C8.8 9 7.5 6 7.5 3.5 10.7 3.5 12 6.5 12 9z"/><path d="M12 9c3.2 0 4.5-3 4.5-5.5C13.3 3.5 12 6.5 12 9z"/></svg><span class="brand-name lg-round">Maple &amp; Co.</span></span>
+        <span class="brand"><svg viewBox="0 0 24 24"><path d="M7 3v6a2 2 0 004 0V3M9 11v10"/><path d="M16 3c-1.6 0-2.5 2-2.5 4.5S15 12 16 12v9"/></svg><span class="brand-name lg-serif-it">Harbor &amp; Vine</span></span>
+      </div>
     </div>
   </div>
 
-  <!-- STATS -->
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-num"><span class="count" data-target="48">0</span><span class="stat-unit">hr</span></div>
-      <div class="stat-lbl">Average turnaround</div>
+  <!-- GUIDED BOOKING -->
+  <section class="book-sec" id="book">
+    <div class="book-head reveal">
+      <h2>Book your free demo.</h2>
+      <p>A few quick questions, then pick a time. Takes about 30 seconds.</p>
     </div>
-    <div class="stat">
-      <div class="stat-num">$<span class="count" data-target="500">0</span></div>
-      <div class="stat-lbl">Flat build fee</div>
+    <div class="book-card reveal">
+      <div class="book-progress">
+        <span id="book-step-label">Step 1 of 4</span>
+        <div class="book-bar"><div class="book-bar-fill" id="book-bar"></div></div>
+      </div>
+
+      <div class="book-q" data-step="1">
+        <label class="book-qlabel" for="bk-email">What's your email?</label>
+        <input type="email" id="bk-email" class="book-input" placeholder="jane@yourbusiness.com" autocomplete="email">
+        <p class="book-hint">I'll send your demo details here. Free 15-minute demo, no pressure, no pitch.</p>
+        <div class="book-actions"><button type="button" class="btn btn-primary book-next">Next &rarr;</button></div>
+      </div>
+
+      <div class="book-q" data-step="2" hidden>
+        <label class="book-qlabel" for="bk-name">And your name?</label>
+        <input type="text" id="bk-name" class="book-input" placeholder="Jane Smith" autocomplete="name">
+        <div class="book-actions"><button type="button" class="book-back2">&larr; Back</button><button type="button" class="btn btn-primary book-next">Next &rarr;</button></div>
+      </div>
+
+      <div class="book-q" data-step="3" hidden>
+        <label class="book-qlabel" for="bk-biz">What's your business? <span class="book-opt-tag">Optional</span></label>
+        <input type="text" id="bk-biz" class="book-input" placeholder="Your business name">
+        <div class="book-actions"><button type="button" class="book-back2">&larr; Back</button><button type="button" class="btn btn-primary book-next">Next &rarr;</button><button type="button" class="book-skip">Skip to scheduling</button></div>
+      </div>
+
+      <div class="book-q" data-step="4" hidden>
+        <label class="book-qlabel">What do you need? <span class="book-opt-tag">Optional</span></label>
+        <div class="book-opts">
+          <button type="button" class="book-opt" data-val="Website">Website</button>
+          <button type="button" class="book-opt" data-val="Local SEO &amp; Google">Local SEO &amp; Google</button>
+          <button type="button" class="book-opt" data-val="Website + SEO">Website + SEO</button>
+          <button type="button" class="book-opt" data-val="Not sure yet">Not sure yet</button>
+        </div>
+        <div class="book-actions"><button type="button" class="book-back2">&larr; Back</button><button type="button" class="book-skip">Skip to scheduling</button></div>
+      </div>
+
+      <div class="book-q" data-step="5" hidden>
+        <div class="book-done">
+          <div class="book-done-title" id="book-done-title">You're set.</div>
+          <p class="book-done-sub">Grab a time that works for you. I'll come prepared.</p>
+          <a class="btn btn-primary book-open" id="book-open" href="https://calendly.com/altodigital/alto-digital-meeting?hide_gdpr_banner=1" target="_blank" rel="noopener">Pick a time &rarr;</a>
+          <button type="button" class="book-back2">&larr; Back</button>
+        </div>
+      </div>
     </div>
-    <div class="stat">
-      <div class="stat-num">$<span class="count" data-target="99">0</span><span class="stat-sub">/mo</span></div>
-      <div class="stat-lbl">After it goes live</div>
-    </div>
-  </div>
+
+    <!-- hidden Netlify form: captures the lead even if they never pick a time -->
+    <form name="booking-lead" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="email" name="email">
+      <input type="text" name="name">
+      <input type="text" name="business">
+      <input type="text" name="need">
+      <input name="bot-field">
+    </form>
+  </section>
 
   <!-- SERVICES -->
   <section class="sec" id="services">
-    <div class="sec-label">What we do</div>
-    <h2>Two services.<br>Done well.</h2>
-    <p class="sec-sub">No bloated packages. Just the work that actually moves the needle for a small business.</p>
-    <div class="svc-grid reveal">
-      <div class="svc">
-        <div class="svc-num">01</div>
-        <div class="svc-title">Website Design<br>&amp; Build</div>
-        <p class="svc-desc">Custom site built from scratch. Mobile-first, fast-loading, designed around your business. Live in 48 hours.</p>
+    <h2>Everything your business<br>needs to win online.</h2>
+    <p class="sec-sub">No bloated packages. Everything we do is built around a single goal: more leads for your local business.</p>
+    <div class="svc-list reveal">
+      <div class="svc-row">
+        <div class="svc-row-num">01</div>
+        <div class="svc-row-body">
+          <h3 class="svc-row-title">Website Design &amp; Development</h3>
+          <p class="svc-row-desc">A fast, professional website built to convert local visitors into leads. Not a template, not a builder. A real lead generation machine, built from the ground up.</p>
+        </div>
       </div>
-      <div class="svc">
-        <div class="svc-num">02</div>
-        <div class="svc-title">Local SEO</div>
-        <p class="svc-desc">Show up when someone in your city searches for what you do. Google Business setup, on-page optimization, local targeting.</p>
+      <div class="svc-row">
+        <div class="svc-row-num">02</div>
+        <div class="svc-row-body">
+          <h3 class="svc-row-title">Local SEO &amp; GBP Optimization</h3>
+          <p class="svc-row-desc">Google Business Profile and search optimization so you rank where it matters: Google Search, Maps, and the AI platforms where your next customer is already looking.</p>
+        </div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-row-num">03</div>
+        <div class="svc-row-body">
+          <h3 class="svc-row-title">Lead Generation Systems</h3>
+          <p class="svc-row-desc">The full infrastructure that turns visitors into booked jobs: optimized conversion flows, review generation, and the systems that keep leads coming in automatically.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="sec" id="how">
+    <h2>Three steps.<br>Real results.</h2>
+    <p class="sec-sub">From the first call to leads landing in your inbox. Here's exactly how it goes.</p>
+    <div class="steps-grid reveal">
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">01</div>
+        <div class="step-title">We build<br>your system</div>
+        <p class="step-desc">We start with a fast, professionally designed website built from scratch. No templates, no page builders. Clear service pages, location-optimized copy, and a layout engineered to convert visitors into leads.</p>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">02</div>
+        <div class="step-title">We get<br>you found</div>
+        <p class="step-desc">Google Business Profile, on-site SEO, local citations, and the structured data that gets you ranking on Google Search, Maps, and the AI platforms where your next customer is already looking.</p>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">03</div>
+        <div class="step-title">You get<br>leads</div>
+        <p class="step-desc">The system works while you work. Calls come in. Form submissions land in your inbox. Jobs get booked. And because the infrastructure is right, it compounds over time.</p>
       </div>
     </div>
   </section>
 
   <!-- WORK -->
   <section class="sec sec-alt" id="work">
-    <div class="sec-label">The work</div>
-    <h2>Built and live.</h2>
-    <p class="sec-sub">No templates, no page builders. Clean code that loads fast and looks right on every device.</p>
-    <div class="work-grid reveal">
-      <a href="portfolio.html" class="work-card">
-        <img class="work-thumb" src="assets/dapper-district.png" alt="Dapper District">
-        <div class="work-meta">
-          <div>
-            <div class="work-name">Dapper District</div>
-            <div class="work-tag">Website Design &nbsp;&bull;&nbsp; Atlanta, GA</div>
-          </div>
-          <span class="work-badge">Live</span>
-        </div>
+    <h2>Real work for<br>real businesses.</h2>
+    <p class="sec-sub">No templates, no page builders. Real sites for real local businesses, fast and built to convert.</p>
+    <div class="work-feature reveal">
+      <a href="portfolio.html" class="work-feature-img">
+        <img src="assets/work/revive-home-remodeling.png" alt="Revive Home Remodeling website">
       </a>
-      <div class="work-placeholder">
-        <div class="plus">+</div>
-        Your site here
+      <div class="work-feature-body">
+        <span class="work-badge">Live</span>
+        <h3 class="work-feature-title">Revive Home Remodeling</h3>
+        <p class="work-feature-meta">Home Remodeling &nbsp;&bull;&nbsp; Fairfield County, CT</p>
+        <p class="work-feature-desc">A full remodeling site with project galleries, before-and-after sliders, dedicated service pages, and a quote-request flow. Fast, mobile-first, and built to turn visitors into booked estimates.</p>
+        <a href="portfolio.html" class="work-feature-link">See the work &rarr;</a>
       </div>
     </div>
-  </section>
-
-  <!-- PRICING -->
-  <section class="sec" id="pricing">
-    <div class="sec-label">Pricing</div>
-    <h2>Simple pricing.<br>No surprises.</h2>
-    <p class="sec-sub">One number to build it. One number to keep it running.</p>
-    <div class="pricing-grid reveal">
-      <div class="price-card featured">
-        <div class="price-amount">$500</div>
-        <div class="price-period">one-time build fee</div>
-        <div class="price-name">Website Build</div>
-        <p class="price-desc">Custom site, mobile optimized, live within 48 hours. Built to represent your business the right way.</p>
-      </div>
-      <div class="price-card">
-        <div class="price-amount">$99</div>
-        <div class="price-period">per month</div>
-        <div class="price-name">Monthly Retainer</div>
-        <p class="price-desc">Hosting, security, backups, and any small updates you need. Cancel anytime, no contracts.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section class="sec sec-alt" id="about">
-    <div class="about-grid">
-      <div class="about-text reveal">
-        <div class="sec-label">About</div>
-        <h2>Alexander<br>Montoro</h2>
-        <p class="about-body">I build websites for small businesses that need to look like they mean business. Fast turnaround, fair price, no agency overhead. You talk to me, I build it, it goes live.</p>
-        <a href="contact.html" class="btn btn-primary">Get in Touch</a>
-      </div>
-      <div class="headshot-wrap reveal delay-1">
-        <div class="headshot-inner">
-          <img src="assets/headshot.png" alt="Alexander Montoro">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta-sec">
-    <div class="sec-label">Ready?</div>
-    <h2>Let's build<br><em style="font-style:italic;color:var(--muted)">your</em> site.</h2>
-    <p>Custom. Live in 48 hours. $500 flat.</p>
-    <a href="contact.html" class="btn-cta-big">Start a Project →</a>
   </section>
 
   <!-- FOOTER -->
-  <footer>
-    <span class="foot-copy">&copy; 2026 Alto Digital</span>
-    <a href="mailto:alexandermontoro1@gmail.com" class="foot-email">alexandermontoro1@gmail.com</a>
+  <footer class="site-footer">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="foot-logo">
+          <div class="foot-logo-badge"><img src="assets/logo-final.png" alt="Alto Digital"></div>
+          <span class="foot-word">ALTO<span>DIGITAL</span></span>
+        </div>
+        <p class="foot-tagline">Digital growth partner for local service businesses. Websites, SEO, and lead generation systems that actually work.</p>
+      </div>
+      <div class="foot-col">
+        <div class="foot-h">Navigation</div>
+        <a href="#work">Work</a>
+        <a href="#services">Services</a>
+        <a href="#how">How It Works</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="foot-col">
+        <div class="foot-h">Contact</div>
+        <a href="mailto:altodigital@gmail.com">altodigital@gmail.com</a>
+        <a href="tel:4702613445">470-261-3445</a>
+        <a href="https://calendly.com/altodigital/alto-digital-meeting" target="_blank" rel="noopener" onclick="if(window.Calendly){Calendly.initPopupWidget({url:this.href});return false;}">Book a free demo</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 Alto Digital. All rights reserved.</span>
+      <span class="foot-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+      </span>
+    </div>
   </footer>
 
   <script>
@@ -1025,6 +1224,306 @@
       });
     }, { threshold: 0.3 });
     document.querySelectorAll('.stats-bar').forEach(el => countObs.observe(el));
+  </script>
+
+  <script>
+    // Hero spiral animation (vanilla canvas port, brand-tinted)
+    (function () {
+      const canvas = document.getElementById('hero-spiral');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const BG = '#050810';
+      const changeEventTime = 0.32;
+      const cameraZ = -400;
+      const cameraTravelDistance = 3400;
+      const startDotYOffset = 28;
+      const viewZoom = 100;
+      const NUM_STARS = 3800;
+      const TRAIL = 80;
+      const LOOP_MS = 15000;
+
+      let w, h, dpr, time = 0;
+      const stars = [];
+
+      const clamp = (v, mn, mx) => Math.min(Math.max(v, mn), mx);
+      const lerp = (a, b, t) => a * (1 - t) + b * t;
+      const map = (v, a, b, c, d) => c + (d - c) * ((v - a) / (b - a));
+      const rnd = (a, b) => a + Math.random() * (b - a);
+      const ease = (p, g) => p < 0.5 ? 0.5 * Math.pow(2 * p, g) : 1 - 0.5 * Math.pow(2 * (1 - p), g);
+      function easeOutElastic(x) {
+        const c4 = (2 * Math.PI) / 4.5;
+        if (x <= 0) return 0; if (x >= 1) return 1;
+        return Math.pow(2, -8 * x) * Math.sin((x * 8 - 0.75) * c4) + 1;
+      }
+
+      function spiralPath(p) {
+        p = clamp(1.2 * p, 0, 1);
+        p = ease(p, 1.8);
+        const theta = 2 * Math.PI * 6 * Math.sqrt(p);
+        const r = 170 * Math.sqrt(p);
+        return { x: r * Math.cos(theta), y: r * Math.sin(theta) + startDotYOffset };
+      }
+
+      function rotatePt(v1, v2, p, orientation) {
+        const mx = (v1.x + v2.x) / 2, my = (v1.y + v2.y) / 2;
+        const dx = v1.x - mx, dy = v1.y - my;
+        const angle = Math.atan2(dy, dx);
+        const o = orientation ? -1 : 1;
+        const r = Math.sqrt(dx * dx + dy * dy);
+        const bounce = Math.sin(p * Math.PI) * 0.05 * (1 - p);
+        return {
+          x: mx + r * (1 + bounce) * Math.cos(angle + o * Math.PI * easeOutElastic(p)),
+          y: my + r * (1 + bounce) * Math.sin(angle + o * Math.PI * easeOutElastic(p))
+        };
+      }
+
+      function showProjectedDot(pos, sizeFactor) {
+        const t2 = clamp(map(time, changeEventTime, 1, 0, 1), 0, 1);
+        const newCamZ = cameraZ + ease(Math.pow(t2, 1.2), 1.8) * cameraTravelDistance;
+        if (pos.z > newCamZ) {
+          const depth = pos.z - newCamZ;
+          const sw = 400 * sizeFactor / depth;
+          ctx.beginPath();
+          ctx.arc(viewZoom * pos.x / depth, viewZoom * pos.y / depth, clamp(sw * 0.5, 0.45, 2.6), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function makeStar() {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 30 * Math.random() + 15;
+        const spiralLocation = (1 - Math.pow(1 - Math.random(), 3.0)) / 1.3;
+        let z = rnd(0.5 * cameraZ, cameraTravelDistance + cameraZ);
+        z = lerp(z, cameraTravelDistance / 2, 0.3 * spiralLocation);
+        return {
+          angle, distance,
+          rotationDirection: Math.random() > 0.5 ? 1 : -1,
+          expansionRate: 1.2 + Math.random() * 0.8,
+          finalScale: 0.7 + Math.random() * 0.6,
+          dx: distance * Math.cos(angle),
+          dy: distance * Math.sin(angle),
+          spiralLocation, z,
+          strokeWeightFactor: Math.pow(Math.random(), 2.0),
+          blue: Math.random() < 0.22
+        };
+      }
+
+      function renderStar(s, p) {
+        const q = p - s.spiralLocation;
+        if (q <= 0) return;
+        const sp = spiralPath(s.spiralLocation);
+        const dp = clamp(4 * q, 0, 1);
+        let sx, sy;
+        if (dp < 0.3) {
+          const e = lerp(dp, Math.pow(dp, 2), dp / 0.3);
+          sx = lerp(sp.x, sp.x + s.dx * 0.3, e / 0.3);
+          sy = lerp(sp.y, sp.y + s.dy * 0.3, e / 0.3);
+        } else if (dp < 0.7) {
+          const mp = (dp - 0.3) / 0.4;
+          const curve = Math.sin(mp * Math.PI) * s.rotationDirection * 1.5;
+          const baseX = sp.x + s.dx * 0.3, baseY = sp.y + s.dy * 0.3;
+          const targetX = sp.x + s.dx * 0.7, targetY = sp.y + s.dy * 0.7;
+          sx = lerp(baseX, targetX, mp) + (-s.dy * 0.4 * curve) * mp;
+          sy = lerp(baseY, targetY, mp) + (s.dx * 0.4 * curve) * mp;
+        } else {
+          const fp = (dp - 0.7) / 0.3;
+          const baseX = sp.x + s.dx * 0.7, baseY = sp.y + s.dy * 0.7;
+          const td = s.distance * s.expansionRate * 1.5;
+          const sa = s.angle + 1.2 * s.rotationDirection * fp * Math.PI;
+          sx = lerp(baseX, sp.x + td * Math.cos(sa), fp);
+          sy = lerp(baseY, sp.y + td * Math.sin(sa), fp);
+        }
+        const vx = (s.z - cameraZ) * sx / viewZoom;
+        const vy = (s.z - cameraZ) * sy / viewZoom;
+        let sizeMul = dp < 0.6 ? 1.0 + dp * 0.2 : lerp(1.2, s.finalScale, (dp - 0.6) / 0.4);
+        ctx.fillStyle = s.blue ? 'rgba(120,170,255,1)' : '#fff';
+        showProjectedDot({ x: vx, y: vy, z: s.z }, 8.5 * s.strokeWeightFactor * sizeMul);
+      }
+
+      function drawTrail(t1) {
+        for (let i = 0; i < TRAIL; i++) {
+          const f = map(i, 0, TRAIL, 1.1, 0.1);
+          const sw = (1.3 * (1 - t1) + 3.0 * Math.sin(Math.PI * t1)) * f;
+          ctx.fillStyle = '#fff';
+          ctx.lineWidth = sw;
+          const pos = spiralPath(t1 - 0.00015 * i);
+          const rot = rotatePt(pos, { x: pos.x + 5, y: pos.y + 5 }, Math.sin(time * Math.PI * 2) * 0.5 + 0.5, i % 2 === 0);
+          ctx.beginPath();
+          ctx.arc(rot.x, rot.y, sw / 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function render(extraRot, bob, sc) {
+        ctx.fillStyle = BG;
+        ctx.fillRect(0, 0, w, h);
+        ctx.save();
+        ctx.translate(w / 2, h / 2 + (bob || 0));
+        if (sc) ctx.scale(sc, sc);
+        const t1 = clamp(map(time, 0, changeEventTime + 0.25, 0, 1), 0, 1);
+        const t2 = clamp(map(time, changeEventTime, 1, 0, 1), 0, 1);
+        ctx.rotate(-Math.PI * ease(t2, 2.7) + (extraRot || 0));
+        drawTrail(t1);
+        ctx.fillStyle = '#fff';
+        for (const s of stars) renderStar(s, t1);
+        if (time > changeEventTime) {
+          showProjectedDot({ x: 0, y: cameraZ * startDotYOffset / viewZoom, z: cameraTravelDistance }, 2.5);
+        }
+        ctx.restore();
+      }
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const rect = canvas.getBoundingClientRect();
+        w = rect.width; h = rect.height;
+        canvas.width = w * dpr; canvas.height = h * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        render();   // redraw current frame (matters after the intro has settled)
+      }
+
+      // Play the spiral formation ONCE, then let the particles drift gently (no re-loop).
+      const DURATION = 8000;   // length of the one-time intro
+      const TARGET = 0.62;     // formed-spiral frame the intro settles on
+      const start = performance.now();
+      let phase = 'intro';
+      let aRot = 0;
+      function loop(now) {
+        if (phase === 'intro') {
+          const prog = Math.min((now - start) / DURATION, 1);
+          time = (1 - Math.pow(1 - prog, 3)) * TARGET;  // easeOutCubic settle
+          render();
+          if (prog >= 1) phase = 'ambient';
+        } else {
+          aRot += 0.0005;                                 // slow rotational drift
+          const bob = Math.sin(now * 0.0004) * 9;         // gentle vertical float
+          const sc = 1 + Math.sin(now * 0.0006) * 0.018;  // subtle breathing
+          render(aRot, bob, sc);
+        }
+        if (!reduce) requestAnimationFrame(loop);
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+      for (let i = 0; i < NUM_STARS; i++) stars.push(makeStar());
+      if (reduce) { time = TARGET; render(); }
+      else requestAnimationFrame(loop);
+    })();
+  </script>
+
+  <script>
+    // Guided booking: one question at a time, then open Calendly prefilled
+    (function () {
+      const sec = document.getElementById('book');
+      if (!sec) return;
+      const qs = Array.from(sec.querySelectorAll('.book-q'));
+      const label = document.getElementById('book-step-label');
+      const bar = document.getElementById('book-bar');
+      const total = qs.length - 1;            // last step is the confirmation
+      let step = 1;
+      let captured = false;
+      const answers = { email: '', name: '', biz: '', need: '' };
+
+      function show(n) {
+        n = Math.max(1, Math.min(n, qs.length));
+        qs.forEach(q => { q.hidden = (+q.dataset.step !== n); });
+        step = n;
+        if (n <= total) {
+          label.textContent = 'Step ' + n + ' of ' + total;
+          bar.style.width = (n / total * 100) + '%';
+        } else {
+          label.textContent = 'All set';
+          bar.style.width = '100%';
+        }
+        const active = qs.find(q => +q.dataset.step === n);
+        const inp = active && active.querySelector('.book-input');
+        if (inp) setTimeout(() => inp.focus(), 60);
+      }
+
+      function store(n) {
+        if (n === 1) { const v = document.getElementById('bk-email').value.trim(); if (!/.+@.+\..+/.test(v)) return bad('bk-email'); answers.email = v; }
+        if (n === 2) { const v = document.getElementById('bk-name').value.trim(); if (!v) return bad('bk-name'); answers.name = v.replace(/\s+/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); }
+        if (n === 3) { answers.biz = document.getElementById('bk-biz').value.trim(); }
+        return true;
+      }
+      function bad(id) { const el = document.getElementById(id); el.style.borderColor = '#ef4444'; el.focus(); return false; }
+
+      // fire once we have the email + name, so a partial visitor is still a lead
+      function captureLead() {
+        if (captured || !answers.email) return;
+        captured = true;
+        const body = new URLSearchParams({
+          'form-name': 'booking-lead',
+          email: answers.email, name: answers.name, business: answers.biz, need: answers.need
+        });
+        fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() }).catch(() => {});
+      }
+
+      function goDone() {
+        document.getElementById('book-done-title').textContent = answers.name ? ("You're set, " + answers.name + ".") : "You're set.";
+        captureLead();
+        show(5);
+      }
+
+      sec.querySelectorAll('.book-next').forEach(b => b.addEventListener('click', () => { if (store(step)) show(step + 1); }));
+      sec.querySelectorAll('.book-back2').forEach(b => b.addEventListener('click', () => show(step - 1)));
+      sec.querySelectorAll('.book-skip').forEach(b => b.addEventListener('click', goDone));
+      sec.querySelectorAll('.book-input').forEach(inp => {
+        inp.addEventListener('input', () => { inp.style.borderColor = ''; });
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (store(step)) show(step + 1); } });
+      });
+      sec.querySelectorAll('.book-opt').forEach(b => b.addEventListener('click', () => { answers.need = b.dataset.val; goDone(); }));
+      document.getElementById('book-open').addEventListener('click', (e) => {
+        if (!window.Calendly) return;   // script not ready/blocked: let the link open Calendly in a new tab
+        e.preventDefault();
+        // a1/a2/a3 map to Calendly's custom questions BY POSITION:
+        //   a1 = "What's your business called?"
+        //   a2 = "Do you have a website right now?"  (asked in Calendly, not here)
+        //   a3 = "What do you want to fix first?"
+        // Reordering the questions in Calendly breaks this mapping. Radio
+        // answers only prefill when the string matches an option exactly.
+        Calendly.initPopupWidget({
+          url: 'https://calendly.com/altodigital/alto-digital-meeting?hide_gdpr_banner=1',
+          prefill: {
+            name: answers.name,
+            email: answers.email,
+            customAnswers: { a1: answers.biz, a3: answers.need }
+          }
+        });
+      });
+
+      show(1);
+    })();
+  </script>
+
+  <script>
+    // Custom cursor ring (lags behind pointer, expands over interactive elements)
+    (function () {
+      if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+      const ring = document.createElement('div');
+      ring.className = 'cursor-ring';
+      document.body.appendChild(ring);
+      let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        ring.classList.add('show');
+      });
+      document.addEventListener('mouseleave', () => ring.classList.remove('show'));
+      const interactive = 'a, button, .btn, input, textarea, select, [role="button"]';
+      document.addEventListener('mouseover', e => {
+        if (e.target.closest(interactive)) ring.classList.add('hovering');
+      });
+      document.addEventListener('mouseout', e => {
+        if (e.target.closest(interactive)) ring.classList.remove('hovering');
+      });
+      (function loop() {
+        rx += (mx - rx) * 0.18;
+        ry += (my - ry) * 0.18;
+        ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%)';
+        requestAnimationFrame(loop);
+      })();
+    })();
   </script>
 
 </body>
