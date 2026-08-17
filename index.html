@@ -1,1530 +1,3075 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Alto Digital — Web Design for Small Businesses</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
+
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,800;1,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css2?family=Oswald:ital,wght@0,600;0,700;1,600;1,700&family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@600;700&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+
   <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
   <style>
+
     :root {
+
       --bg:       #050810;
+
       --bg2:      #08101F;
+
       --blue:     #2563EB;
+
       --blue-lt:  #60A5FA;
+
       --blue-dim: rgba(37,99,235,0.15);
+
       --text:     #F0F4FF;
+
       --muted:    #7B91B0;
+
       --border:   rgba(255,255,255,0.07);
+
       --glass:    rgba(255,255,255,0.03);
+
     }
+
+
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     html { scroll-behavior: smooth; }
+
     body {
+
       background: var(--bg);
+
       color: var(--text);
+
       font-family: 'Inter', sans-serif;
+
       font-size: 16px;
+
       line-height: 1.6;
+
       overflow-x: hidden;
+
     }
+
+
 
     /* ── CURSOR RING ── */
+
     .cursor-ring {
+
       position: fixed; top: 0; left: 0;
+
       width: 34px; height: 34px;
+
       border: 1.5px solid rgba(96,165,250,0.55);
+
       border-radius: 50%;
+
       pointer-events: none;
+
       z-index: 9999;
+
       opacity: 0;
+
       transition: width .25s ease, height .25s ease, background .25s, border-color .25s, opacity .3s;
+
       will-change: transform;
+
     }
+
     .cursor-ring.show { opacity: 1; }
+
     .cursor-ring.hovering {
+
       width: 58px; height: 58px;
+
       background: rgba(37,99,235,0.12);
+
       border-color: rgba(96,165,250,0.95);
+
     }
+
     @media (max-width: 960px) { .cursor-ring { display: none !important; } }
 
+
+
     /* ── ANIMATED BACKGROUND ── */
+
     .bg-canvas {
+
       position: fixed;
+
       inset: 0;
+
       z-index: 0;
+
       pointer-events: none;
+
       overflow: hidden;
+
     }
+
     .bg-blob {
+
       position: absolute;
+
       border-radius: 50%;
+
       filter: blur(100px);
+
       opacity: 0.18;
+
     }
+
     .bg-blob-1 {
+
       width: 700px; height: 700px;
+
       background: radial-gradient(circle, #2563EB, transparent 70%);
+
       top: -20%; left: -10%;
+
       animation: blobFloat1 18s ease-in-out infinite;
+
     }
+
     .bg-blob-2 {
+
       width: 500px; height: 500px;
+
       background: radial-gradient(circle, #818CF8, transparent 70%);
+
       bottom: 10%; right: -5%;
+
       animation: blobFloat2 22s ease-in-out infinite;
+
     }
+
     .bg-blob-3 {
+
       width: 400px; height: 400px;
+
       background: radial-gradient(circle, #2563EB, transparent 70%);
+
       top: 50%; left: 40%;
+
       animation: blobFloat3 25s ease-in-out infinite;
+
       opacity: 0.09;
+
     }
+
     @keyframes blobFloat1 {
+
       0%,100% { transform: translate(0,0); }
+
       33%      { transform: translate(60px, 40px); }
+
       66%      { transform: translate(-30px, 70px); }
+
     }
+
     @keyframes blobFloat2 {
+
       0%,100% { transform: translate(0,0); }
+
       50%      { transform: translate(-80px, -50px); }
+
     }
+
     @keyframes blobFloat3 {
+
       0%,100% { transform: translate(0,0); }
+
       40%      { transform: translate(100px, -60px); }
+
       80%      { transform: translate(-50px, 40px); }
+
     }
+
+
 
     /* Fine grid overlay */
+
     .bg-grid {
+
       position: fixed;
+
       inset: 0;
+
       z-index: 0;
+
       pointer-events: none;
+
       background-image:
+
         linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+
         linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+
       background-size: 60px 60px;
+
       mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+
     }
+
+
 
     /* Everything sits above bg */
+
     nav, main, section, header, footer, .stats-bar, .logos-wrap { position: relative; z-index: 1; }
 
+
+
     /* ── NAV ── */
+
     nav {
+
       position: fixed;
+
       inset: 0 0 auto 0;
+
       z-index: 100;
+
       padding: 0 60px;
+
       height: 68px;
+
       display: flex;
+
       align-items: center;
+
       justify-content: space-between;
+
       background: rgba(5,8,16,0.75);
+
       backdrop-filter: blur(24px);
+
       -webkit-backdrop-filter: blur(24px);
+
       border-bottom: 1px solid var(--border);
+
     }
+
+
 
     .nav-logo {
+
       display: flex;
+
       align-items: center;
+
       gap: 12px;
+
       text-decoration: none;
+
     }
+
     .logo-badge {
+
       width: 36px; height: 36px;
+
       border-radius: 50%;
+
       overflow: hidden;
+
       flex-shrink: 0;
+
     }
+
     .logo-badge img {
+
       width: 100%; height: 100%;
+
       object-fit: cover;
+
       object-position: 50% 38%;
+
       mix-blend-mode: screen;
+
     }
+
     .logo-wordmark {
+
       font-family: 'Barlow', sans-serif;
+
       font-weight: 800;
+
       font-size: 15px;
+
       letter-spacing: 0.12em;
+
       color: var(--text);
+
       line-height: 1;
+
     }
+
     .logo-wordmark span {
+
       display: block;
+
       font-weight: 300;
+
       font-size: 10px;
+
       letter-spacing: 0.22em;
+
       color: var(--muted);
+
       margin-top: 2px;
+
     }
+
+
 
     .nav-links { display: flex; align-items: center; gap: 36px; }
+
     .nav-links a {
+
       color: var(--muted);
+
       text-decoration: none;
+
       font-size: 13px;
+
       font-weight: 500;
+
       letter-spacing: 0.03em;
+
       transition: color 0.2s;
+
     }
+
     .nav-links a:hover { color: var(--text); }
 
+
+
     .btn {
+
       display: inline-flex;
+
       align-items: center;
+
       gap: 8px;
+
       padding: 10px 22px;
+
       border-radius: 8px;
+
       font-size: 13px;
+
       font-weight: 600;
+
       text-decoration: none;
+
       letter-spacing: 0.02em;
+
       transition: all 0.25s;
+
       border: none;
+
       cursor: pointer;
+
     }
+
     .btn-primary {
+
       background: var(--blue);
+
       color: #fff;
+
       box-shadow: 0 0 0 0 rgba(37,99,235,0.4);
+
     }
+
     .btn-primary:hover {
+
       background: #1a52d0;
+
       box-shadow: 0 0 28px rgba(37,99,235,0.5);
+
       transform: translateY(-1px);
+
     }
+
     .btn-ghost {
+
       background: transparent;
+
       color: var(--text);
+
       padding-left: 0; padding-right: 0;
+
     }
+
     .btn-ghost:hover { color: var(--blue-lt); }
+
     .btn-ghost::after { content: ' →'; }
 
+
+
     /* ── HERO ── */
+
     .hero {
+
       min-height: 100vh;
+
       display: flex;
+
       flex-direction: column;
+
       align-items: center;
+
       justify-content: center;
+
       text-align: center;
+
       padding: 120px 24px 90px;
+
       position: relative;
+
       z-index: 1;
+
     }
+
+
 
     /* hero spiral animation canvas */
+
     #hero-spiral {
+
       position: absolute;
+
       inset: 0;
+
       width: 100%; height: 100%;
+
       z-index: 0;
+
       pointer-events: none;
+
     }
+
     /* fade the spiral into the page at the bottom edge */
+
     .hero::after {
+
       content: '';
+
       position: absolute;
+
       inset: 0;
+
       z-index: 1;
+
       pointer-events: none;
+
       background: linear-gradient(to bottom, transparent 55%, var(--bg) 100%);
+
     }
+
+
 
     .hero-content {
+
       position: relative;
+
       z-index: 2;
+
       display: flex;
+
       flex-direction: column;
+
       align-items: center;
+
       max-width: 680px;
+
     }
+
     /* dark halo keeps text legible over the bright spiral core */
+
     .hero-content::before {
+
       content: '';
+
       position: absolute;
+
       inset: -60px -90px;
+
       z-index: -1;
+
       pointer-events: none;
+
       background: radial-gradient(ellipse at center, rgba(5,8,16,0.80) 0%, rgba(5,8,16,0.45) 45%, transparent 75%);
+
     }
+
     .hero-content h1 { text-shadow: 0 2px 40px rgba(5,8,16,0.9); }
+
     .hero-content .hero-sub { margin-left: auto; margin-right: auto; text-shadow: 0 1px 20px rgba(5,8,16,0.85); }
+
     .hero-content .hero-actions { justify-content: center; }
 
+
+
     .hero-eyebrow {
+
       display: inline-flex;
+
       align-items: center;
+
       gap: 8px;
+
       background: rgba(37,99,235,0.1);
+
       border: 1px solid rgba(37,99,235,0.25);
+
       border-radius: 100px;
+
       padding: 6px 14px 6px 8px;
+
       font-size: 12px;
+
       font-weight: 600;
+
       letter-spacing: 0.06em;
+
       color: var(--blue-lt);
+
       margin-bottom: 28px;
+
     }
+
     .hero-eyebrow-dot {
+
       width: 6px; height: 6px;
+
       border-radius: 50%;
+
       background: var(--blue-lt);
+
       animation: pulse 2s ease-in-out infinite;
+
     }
+
     @keyframes pulse {
+
       0%,100% { opacity: 1; transform: scale(1); }
+
       50%      { opacity: 0.4; transform: scale(0.7); }
+
     }
+
+
 
     h1 {
+
       font-family: 'Barlow', sans-serif;
+
       font-weight: 800;
+
       font-size: clamp(52px, 6.5vw, 84px);
+
       line-height: 0.96;
+
       letter-spacing: -0.04em;
+
       margin-bottom: 24px;
+
       color: var(--text);
+
     }
+
     .grad {
+
       background: linear-gradient(120deg, #60A5FA 0%, #2563EB 50%, #818CF8 100%);
+
       background-size: 200% auto;
+
       -webkit-background-clip: text;
+
       -webkit-text-fill-color: transparent;
+
       background-clip: text;
+
       animation: shimmer 4s linear infinite;
+
     }
+
     @keyframes shimmer {
+
       to { background-position: 200% center; }
+
     }
+
+
 
     .hero-sub {
+
       font-size: 17px;
+
       color: var(--muted);
+
       line-height: 1.8;
+
       max-width: 440px;
+
       margin-bottom: 40px;
+
     }
+
     .hero-actions { display: flex; align-items: center; gap: 24px; }
 
+
+
     /* ── BROWSER MOCKUP ── */
+
     .hero-right {
+
       display: flex;
+
       align-items: center;
+
       justify-content: center;
+
       position: relative;
+
     }
+
+
 
     /* Floating glow ring behind mockup */
+
     .mockup-glow {
+
       position: absolute;
+
       width: 110%;
+
       height: 110%;
+
       background: radial-gradient(ellipse, rgba(37,99,235,0.18) 0%, transparent 65%);
+
       animation: glowPulse 4s ease-in-out infinite;
+
     }
+
     @keyframes glowPulse {
+
       0%,100% { opacity: 0.6; transform: scale(1); }
+
       50%      { opacity: 1; transform: scale(1.05); }
+
     }
+
+
 
     .mockup-wrap {
+
       width: 100%;
+
       max-width: 580px;
+
       transform: perspective(1200px) rotateY(-5deg) rotateX(2deg);
+
       border-radius: 14px;
+
       overflow: hidden;
+
       border: 1px solid rgba(255,255,255,0.1);
+
       box-shadow:
+
         0 0 0 1px rgba(37,99,235,0.15),
+
         0 40px 120px rgba(0,0,0,0.7),
+
         0 0 60px rgba(37,99,235,0.08);
+
       position: relative;
+
       z-index: 1;
+
       transition: transform 0.6s ease;
+
     }
+
     .mockup-wrap:hover {
+
       transform: perspective(1200px) rotateY(-2deg) rotateX(1deg) translateY(-8px);
+
     }
+
     .mock-bar {
+
       background: #111827;
+
       height: 38px;
+
       display: flex;
+
       align-items: center;
+
       padding: 0 14px;
+
       gap: 8px;
+
       border-bottom: 1px solid rgba(255,255,255,0.05);
+
     }
+
     .mock-dots { display: flex; gap: 6px; }
+
     .mock-dots span { width: 10px; height: 10px; border-radius: 50%; }
+
     .mock-dots span:nth-child(1) { background: #FF5F57; }
+
     .mock-dots span:nth-child(2) { background: #FEBC2E; }
+
     .mock-dots span:nth-child(3) { background: #28C840; }
+
     .mock-url {
+
       flex: 1;
+
       background: rgba(255,255,255,0.05);
+
       border-radius: 5px;
+
       height: 22px;
+
       display: flex;
+
       align-items: center;
+
       padding: 0 10px;
+
       font-size: 11px;
+
       color: rgba(255,255,255,0.3);
+
       font-family: 'Inter', monospace;
+
     }
+
     .mock-screen {
+
       display: block;
+
       width: 100%;
+
       aspect-ratio: 16/10;
+
       object-fit: cover;
+
       object-position: top;
+
     }
+
+
 
     /* Floating badges on mockup */
+
     .badge-float {
+
       position: absolute;
+
       background: rgba(10,16,32,0.85);
+
       backdrop-filter: blur(12px);
+
       border: 1px solid rgba(255,255,255,0.1);
+
       border-radius: 10px;
+
       padding: 10px 16px;
+
       font-size: 12px;
+
       font-weight: 600;
+
       color: var(--text);
+
       display: flex;
+
       align-items: center;
+
       gap: 8px;
+
       z-index: 2;
+
       box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+
     }
+
     .badge-float-1 {
+
       bottom: 16px;
+
       left: -86px;
+
       animation: floatBadge 3s ease-in-out infinite;
+
     }
+
     .badge-float-2 {
+
       top: 16px;
+
       right: -86px;
+
       animation: floatBadge 3.5s ease-in-out infinite 0.5s;
+
     }
+
     @keyframes floatBadge {
+
       0%,100% { transform: translateY(0); }
+
       50%      { transform: translateY(-8px); }
+
     }
+
     .badge-dot-green {
+
       position: relative;
+
       width: 8px; height: 8px;
+
       border-radius: 50%;
+
       background: #22C55E;
+
       flex-shrink: 0;
+
     }
+
     .badge-dot-green::before {
+
       content: '';
+
       position: absolute;
+
       inset: -3px;
+
       border-radius: 50%;
+
       background: #22C55E;
+
       animation: ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+
     }
+
     @keyframes ping {
+
       0%   { transform: scale(1);   opacity: 0.7; }
+
       75%, 100% { transform: scale(2.5); opacity: 0; }
+
     }
+
     .badge-icon { font-size: 16px; }
 
+
+
     /* ── LOGO MARQUEE ── */
+
     .logos-wrap {
+
       border-top: 1px solid var(--border);
+
       border-bottom: 1px solid var(--border);
+
       padding: 30px 0 34px;
+
       background: rgba(255,255,255,0.015);
+
     }
+
     .logos-label {
+
       text-align: center;
+
       font-size: 11px; font-weight: 600;
+
       letter-spacing: 0.2em; text-transform: uppercase;
+
       color: var(--muted); margin-bottom: 26px;
+
     }
+
     .logos-viewport {
+
       overflow: hidden;
+
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+
       mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+
     }
+
     .logos-track {
+
       display: flex;
+
       align-items: center;
+
       gap: 68px;
+
       width: max-content;
+
       animation: logosScroll 40s linear infinite;
+
     }
+
     @keyframes logosScroll {
+
       from { transform: translateX(0); }
+
       to   { transform: translateX(-50%); }
+
     }
+
     .brand {
+
       display: inline-flex; align-items: center; gap: 12px;
+
       color: #AEBBD0; opacity: 0.72;
+
       flex-shrink: 0; white-space: nowrap;
+
     }
+
     .brand svg {
+
       width: 27px; height: 27px; flex-shrink: 0;
+
       stroke: currentColor; fill: none;
+
       stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+
     }
+
     .brand-name { font-size: 22px; line-height: 1; letter-spacing: -0.01em; }
+
     .lg-serif    { font-family: 'Playfair Display', serif; font-weight: 700; }
+
     .lg-serif-it { font-family: 'Playfair Display', serif; font-weight: 700; font-style: italic; letter-spacing: 0; }
+
     .lg-cond     { font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 19px; }
+
     .lg-cond-it  { font-family: 'Oswald', sans-serif; font-weight: 700; font-style: italic; text-transform: uppercase; letter-spacing: 0.05em; font-size: 19px; }
+
     .lg-geo      { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 20px; }
+
     .lg-geo-caps { font-family: 'Poppins', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; font-size: 16px; }
+
     .lg-round    { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 21px; }
+
     @media (max-width: 700px) {
+
       .logos-track { gap: 46px; animation-duration: 32s; }
+
       .brand-name { font-size: 18px; }
+
       .lg-cond, .lg-cond-it { font-size: 16px; }
+
       .lg-geo { font-size: 17px; }
+
       .lg-geo-caps { font-size: 14px; }
+
       .brand svg { width: 22px; height: 22px; }
+
     }
+
+
 
     /* ── STATS ── */
+
     .stats-bar {
+
       display: grid;
+
       grid-template-columns: repeat(3, 1fr);
+
       border-bottom: 1px solid var(--border);
+
     }
+
     .stat {
+
       padding: 44px 60px;
+
       border-right: 1px solid var(--border);
+
       position: relative;
+
       overflow: hidden;
+
       transition: background 0.3s;
+
     }
+
     .stat:hover { background: rgba(37,99,235,0.04); }
+
     .stat:last-child { border-right: none; }
+
     .stat::before {
+
       content: '';
+
       position: absolute;
+
       top: 0; left: 0; right: 0;
+
       height: 2px;
+
       background: linear-gradient(90deg, transparent, var(--blue), transparent);
+
       opacity: 0;
+
       transition: opacity 0.3s;
+
     }
+
     .stat:hover::before { opacity: 1; }
 
+
+
     .stat-num {
+
       font-family: 'Barlow', sans-serif;
+
       font-weight: 800;
+
       font-size: 58px;
+
       line-height: 1;
+
       letter-spacing: -0.04em;
+
       color: var(--text);
+
       font-variant-numeric: tabular-nums;
+
     }
+
     .stat-unit { font-size: 24px; color: var(--blue); font-weight: 700; }
+
     .stat-sub  { font-size: 24px; color: var(--muted); font-weight: 600; }
+
     .stat-lbl  { font-size: 13px; color: var(--muted); margin-top: 8px; letter-spacing: 0.02em; }
 
+
+
     /* ── GUIDED BOOKING ── */
+
     .book-sec {
+
       padding: 100px 60px;
+
       background: rgba(255,255,255,0.015);
+
       border-top: 1px solid var(--border);
+
       border-bottom: 1px solid var(--border);
+
       position: relative; z-index: 1;
+
     }
+
     .book-head { text-align: center; max-width: 620px; margin: 0 auto 44px; }
+
     .book-head h2 { margin-bottom: 14px; }
+
     .book-head p { color: var(--muted); font-size: 17px; line-height: 1.7; }
+
     .book-card {
+
       max-width: 600px; margin: 0 auto;
+
       background: var(--glass);
+
       border: 1px solid var(--border);
+
       border-radius: 20px;
+
       padding: 46px;
+
       min-height: 300px;
+
       display: flex; flex-direction: column; justify-content: center;
+
     }
+
     .book-progress { display: flex; align-items: center; gap: 16px; margin-bottom: 34px; }
+
     #book-step-label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+
     .book-bar { flex: 1; height: 3px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+
     .book-bar-fill { height: 100%; width: 25%; background: var(--blue); border-radius: 3px; transition: width 0.4s cubic-bezier(0.16,1,0.3,1); }
+
     .book-q { display: flex; flex-direction: column; gap: 22px; animation: bookIn 0.4s ease; }
+
     .book-q[hidden] { display: none; }
+
     @keyframes bookIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
     .book-qlabel { font-family: 'Barlow', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.02em; line-height: 1.1; }
+
     .book-input {
+
       width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+
       color: var(--text); font-family: 'Inter', sans-serif; font-size: 18px; padding: 16px 18px; outline: none;
+
       transition: border-color 0.2s, box-shadow 0.2s;
+
     }
+
     .book-input:focus { border-color: rgba(37,99,235,0.55); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+
     .book-input::placeholder { color: rgba(255,255,255,0.25); }
+
     .book-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
     .book-opt {
+
       text-align: left; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px;
+
       color: var(--text); font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500; padding: 18px 20px; cursor: pointer;
+
       transition: border-color 0.2s, background 0.2s, transform 0.2s;
+
     }
+
     .book-opt:hover { border-color: rgba(37,99,235,0.5); background: rgba(37,99,235,0.08); transform: translateY(-2px); }
+
     .book-actions { display: flex; align-items: center; gap: 18px; margin-top: 6px; }
+
     .book-back2 { background: none; border: none; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 14px; cursor: pointer; padding: 0; transition: color 0.2s; }
+
     .book-back2:hover { color: var(--text); }
+
     .book-done { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+
     .book-done-title { font-family: 'Barlow', sans-serif; font-weight: 800; font-size: 30px; letter-spacing: -0.02em; }
+
     .book-done-sub { color: var(--muted); font-size: 17px; line-height: 1.7; }
+
     .book-hint { font-size: 13px; color: var(--muted); margin-top: -8px; line-height: 1.6; }
+
     .book-opt-tag {
+
       font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600;
+
       letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue-lt);
+
       background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.25);
+
       padding: 3px 8px; border-radius: 20px; vertical-align: middle; margin-left: 8px;
+
     }
+
     .book-skip { background: none; border: none; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 14px; cursor: pointer; padding: 0; margin-left: auto; transition: color 0.2s; }
+
     .book-skip:hover { color: var(--text); }
+
     @media (max-width: 640px) {
+
       .book-sec { padding: 72px 24px; }
+
       .book-card { padding: 32px 24px; }
+
       .book-qlabel { font-size: 23px; }
+
       .book-opts { grid-template-columns: 1fr; }
+
     }
+
+
 
     /* ── SECTIONS ── */
+
     .sec { padding: 120px 60px; }
+
     .sec-alt { background: rgba(255,255,255,0.015); }
 
+
+
     .sec-label {
+
       font-size: 11px;
+
       font-weight: 600;
+
       letter-spacing: 0.22em;
+
       text-transform: uppercase;
+
       color: var(--blue);
+
       margin-bottom: 16px;
+
     }
+
     h2 {
+
       font-family: 'Barlow', sans-serif;
+
       font-weight: 800;
+
       font-size: clamp(38px, 4.2vw, 60px);
+
       line-height: 1.02;
+
       letter-spacing: -0.03em;
+
       margin-bottom: 16px;
+
     }
+
     .sec-sub {
+
       font-size: 17px;
+
       color: var(--muted);
+
       line-height: 1.8;
+
       max-width: 480px;
+
       margin-bottom: 64px;
+
     }
+
+
 
     /* ── SERVICES (editorial rows) ── */
+
     .svc-list { border-top: 1px solid var(--border); }
+
     .svc-row {
+
       display: grid;
+
       grid-template-columns: 140px 1fr;
+
       gap: 48px;
+
       padding: 48px 0;
+
       border-bottom: 1px solid var(--border);
+
       align-items: baseline;
+
       transition: padding-left 0.35s cubic-bezier(0.16,1,0.3,1);
+
     }
+
     .svc-row:hover { padding-left: 14px; }
+
     .svc-row-num {
+
       font-family: 'Barlow', sans-serif;
+
       font-weight: 800;
+
       font-size: 60px;
+
       line-height: 1;
+
       letter-spacing: -0.04em;
+
       color: rgba(96,165,250,0.35);
+
       transition: color 0.3s;
+
     }
+
     .svc-row:hover .svc-row-num { color: var(--blue-lt); }
+
     .svc-row-title {
+
       font-family: 'Barlow', sans-serif;
+
       font-weight: 800;
+
       font-size: 28px;
+
       letter-spacing: -0.02em;
+
       line-height: 1.1;
+
       margin-bottom: 14px;
+
     }
+
     .svc-row-desc { font-size: 16px; color: var(--muted); line-height: 1.8; max-width: 640px; }
+
     @media (max-width: 700px) {
+
       .svc-row { grid-template-columns: 1fr; gap: 10px; padding: 34px 0; }
+
       .svc-row:hover { padding-left: 0; }
+
       .svc-row-num { font-size: 40px; }
+
     }
+
+
 
     /* ── WORK ── */
+
     .work-grid {
+
       display: grid;
+
       grid-template-columns: 1fr 1fr;
+
       gap: 20px;
+
     }
+
+
 
     .work-card {
+
       border: 1px solid var(--border);
+
       border-radius: 16px;
+
       overflow: hidden;
+
       display: block;
+
       text-decoration: none;
+
       position: relative;
+
       transition: border-color 0.3s, transform 0.4s, box-shadow 0.4s;
+
     }
+
     .work-card:hover {
+
       border-color: rgba(37,99,235,0.4);
+
       transform: translateY(-8px);
+
       box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 40px rgba(37,99,235,0.12);
+
     }
+
     .work-thumb {
+
       width: 100%;
+
       aspect-ratio: 16/10;
+
       object-fit: cover;
+
       object-position: top;
+
       display: block;
+
       filter: brightness(0.85) saturate(1.05);
+
       transition: filter 0.3s, transform 0.5s;
+
     }
+
     .work-card:hover .work-thumb { filter: brightness(1) saturate(1.1); transform: scale(1.02); }
 
+
+
     .work-meta {
+
       padding: 20px 26px;
+
       display: flex;
+
       align-items: center;
+
       justify-content: space-between;
+
       border-top: 1px solid var(--border);
+
       background: rgba(255,255,255,0.02);
+
     }
+
     .work-name {
+
       font-family: 'Barlow', sans-serif;
+
       font-weight: 800;
+
       font-size: 20px;
+
       letter-spacing: -0.01em;
+
       margin-bottom: 4px;
+
     }
+
     .work-tag { font-size: 12px; color: var(--muted); letter-spacing: 0.03em; }
+
     .work-badge {
+
       font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+
       color: #22C55E;
+
       background: rgba(34,197,94,0.1);
+
       border: 1px solid rgba(34,197,94,0.2);
+
       padding: 4px 12px; border-radius: 20px; white-space: nowrap;
+
     }
+
     .work-placeholder {
+
       border: 1px dashed rgba(255,255,255,0.08);
+
       border-radius: 16px;
+
       display: flex;
+
       flex-direction: column;
+
       align-items: center;
+
       justify-content: center;
+
       gap: 12px;
+
       min-height: 280px;
+
       color: rgba(255,255,255,0.2);
+
       font-size: 12px;
+
       letter-spacing: 0.14em;
+
       text-transform: uppercase;
+
       transition: border-color 0.3s;
+
     }
+
     .work-placeholder:hover { border-color: rgba(37,99,235,0.25); }
+
     .work-placeholder .plus {
+
       width: 40px; height: 40px;
+
       border: 1px dashed rgba(255,255,255,0.12);
+
       border-radius: 50%;
+
       display: flex; align-items: center; justify-content: center;
+
       font-size: 20px;
+
     }
+
+
 
     .work-badge.demo { color: var(--muted); background: rgba(255,255,255,0.05); border-color: var(--border); }
 
+
+
     /* featured work split */
+
     .work-feature {
+
       display: grid;
+
       grid-template-columns: 1.25fr 1fr;
+
       gap: 56px;
+
       align-items: center;
-    }
-    .work-feature-img {
-      display: block;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-      transition: transform 0.4s, box-shadow 0.4s, border-color 0.3s;
-    }
-    .work-feature-img:hover {
-      transform: translateY(-6px);
-      border-color: rgba(37,99,235,0.4);
-      box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 50px rgba(37,99,235,0.12);
-    }
-    .work-feature-img img {
-      width: 100%; display: block;
-      aspect-ratio: 16/10; object-fit: cover; object-position: top;
-      filter: brightness(0.92);
-      transition: filter 0.3s;
-    }
-    .work-feature-img:hover img { filter: brightness(1); }
-    .work-feature-body .work-badge { display: inline-block; margin-bottom: 22px; }
-    .work-feature-title {
-      font-family: 'Barlow', sans-serif;
-      font-weight: 800; font-size: 32px;
-      letter-spacing: -0.02em; line-height: 1.05;
-      margin-bottom: 8px;
-    }
-    .work-feature-meta { font-size: 13px; color: var(--muted); letter-spacing: 0.03em; margin-bottom: 22px; }
-    .work-feature-desc { font-size: 16px; color: var(--muted); line-height: 1.8; max-width: 460px; margin-bottom: 28px; }
-    .work-feature-link {
-      font-family: 'Barlow', sans-serif; font-weight: 700;
-      font-size: 15px; color: var(--blue-lt); text-decoration: none;
-      letter-spacing: 0.01em; transition: color 0.2s;
-    }
-    .work-feature-link:hover { color: var(--text); }
-    @media (max-width: 900px) {
-      .work-feature { grid-template-columns: 1fr; gap: 28px; }
-      .work-feature-desc { max-width: 100%; }
+
     }
 
-    /* ── HOW IT WORKS ── */
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-    .step {
-      background: var(--glass);
-      border: 1px solid var(--border);
+    .work-feature-img {
+
+      display: block;
+
       border-radius: 16px;
-      padding: 44px 38px;
-      position: relative;
+
       overflow: hidden;
+
+      border: 1px solid var(--border);
+
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+
+      transition: transform 0.4s, box-shadow 0.4s, border-color 0.3s;
+
+    }
+
+    .work-feature-img:hover {
+
+      transform: translateY(-6px);
+
+      border-color: rgba(37,99,235,0.4);
+
+      box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 50px rgba(37,99,235,0.12);
+
+    }
+
+    .work-feature-img img {
+
+      width: 100%; display: block;
+
+      aspect-ratio: 16/10; object-fit: cover; object-position: top;
+
+      filter: brightness(0.92);
+
+      transition: filter 0.3s;
+
+    }
+
+    .work-feature-img:hover img { filter: brightness(1); }
+
+    .work-feature-body .work-badge { display: inline-block; margin-bottom: 22px; }
+
+    .work-feature-title {
+
+      font-family: 'Barlow', sans-serif;
+
+      font-weight: 800; font-size: 32px;
+
+      letter-spacing: -0.02em; line-height: 1.05;
+
+      margin-bottom: 8px;
+
+    }
+
+    .work-feature-meta { font-size: 13px; color: var(--muted); letter-spacing: 0.03em; margin-bottom: 22px; }
+
+    .work-feature-desc { font-size: 16px; color: var(--muted); line-height: 1.8; max-width: 460px; margin-bottom: 28px; }
+
+    .work-feature-link {
+
+      font-family: 'Barlow', sans-serif; font-weight: 700;
+
+      font-size: 15px; color: var(--blue-lt); text-decoration: none;
+
+      letter-spacing: 0.01em; transition: color 0.2s;
+
+    }
+
+    .work-feature-link:hover { color: var(--text); }
+
+    @media (max-width: 900px) {
+
+      .work-feature { grid-template-columns: 1fr; gap: 28px; }
+
+      .work-feature-desc { max-width: 100%; }
+
+    }
+
+
+
+    /* ── HOW IT WORKS ── */
+
+    .steps-grid {
+
+      display: grid;
+
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 20px;
+
+    }
+
+    .step {
+
+      background: var(--glass);
+
+      border: 1px solid var(--border);
+
+      border-radius: 16px;
+
+      padding: 44px 38px;
+
+      position: relative;
+
+      overflow: hidden;
+
       transition: border-color 0.3s, transform 0.3s;
+
     }
+
     .step:hover { border-color: rgba(37,99,235,0.4); transform: translateY(-6px); }
+
     .step-line { position: absolute; top: 0; left: 0; height: 3px; width: 100%; background: linear-gradient(90deg, var(--blue), transparent); opacity: 0.55; }
+
     .step-num {
+
       font-family: 'Barlow', sans-serif;
+
       font-weight: 800; font-size: 14px;
+
       letter-spacing: 0.16em; color: var(--blue-lt);
+
       margin: 6px 0 22px;
+
     }
+
     .step-title {
+
       font-family: 'Barlow', sans-serif;
+
       font-weight: 800; font-size: 24px;
+
       letter-spacing: -0.01em; line-height: 1.1;
+
       margin-bottom: 14px;
+
     }
+
     .step-desc { font-size: 15px; color: var(--muted); line-height: 1.8; }
 
 
+
+
+
     /* ── CTA ── */
+
     .cta-sec {
+
       padding: 140px 60px;
+
       text-align: center;
+
       position: relative;
+
       overflow: hidden;
+
     }
+
     .cta-sec::before {
+
       content: '';
+
       position: absolute;
+
       top: 50%; left: 50%;
+
       transform: translate(-50%,-50%);
+
       width: 800px; height: 600px;
+
       background: radial-gradient(ellipse, rgba(37,99,235,0.1) 0%, transparent 65%);
+
       pointer-events: none;
+
     }
+
     .cta-sec h2 { margin-bottom: 16px; font-size: clamp(44px, 5.5vw, 72px); }
+
     .cta-sec p { color: var(--muted); font-size: 19px; margin-bottom: 48px; }
 
+
+
     /* Big glowing CTA button */
+
     .btn-cta-big {
+
       display: inline-flex;
+
       align-items: center;
+
       gap: 10px;
+
       padding: 18px 48px;
+
       border-radius: 100px;
+
       font-size: 16px;
+
       font-weight: 700;
+
       letter-spacing: 0.02em;
+
       text-decoration: none;
+
       color: #fff;
+
       background: var(--blue);
+
       position: relative;
+
       transition: transform 0.25s, box-shadow 0.25s;
+
     }
+
     .btn-cta-big::before {
+
       content: '';
+
       position: absolute;
+
       inset: -2px;
+
       border-radius: 100px;
+
       background: linear-gradient(135deg, #60A5FA, #2563EB, #818CF8);
+
       z-index: -1;
+
       filter: blur(8px);
+
       opacity: 0.6;
+
       transition: opacity 0.3s;
+
     }
+
     .btn-cta-big:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 20px 60px rgba(37,99,235,0.4); }
+
     .btn-cta-big:hover::before { opacity: 1; }
 
+
+
     /* ── FOOTER ── */
+
     .site-footer {
+
       display: block;
+
       border-top: 1px solid var(--border);
+
       padding: 76px 60px 40px;
+
       background: rgba(255,255,255,0.012);
+
       position: relative;
+
       z-index: 1;
+
     }
+
     .foot-grid {
+
       display: grid;
+
       grid-template-columns: 2fr 1fr 1fr;
+
       gap: 56px;
+
       max-width: 1200px;
+
       margin: 0 auto 52px;
+
     }
+
     .foot-brand { max-width: 400px; }
+
     .foot-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+
     .foot-logo-badge { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+
     .foot-logo-badge img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 38%; mix-blend-mode: screen; }
+
     .foot-word { font-family: 'Barlow', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.12em; line-height: 1; color: var(--text); }
+
     .foot-word span { display: block; font-weight: 300; font-size: 10px; letter-spacing: 0.22em; color: var(--muted); margin-top: 2px; }
+
     .foot-tagline { font-size: 15px; color: var(--muted); line-height: 1.8; }
+
     .foot-col { display: flex; flex-direction: column; gap: 14px; }
+
     .foot-h { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
+
     .foot-col a { font-size: 15px; color: var(--muted); text-decoration: none; transition: color 0.2s; width: fit-content; }
+
     .foot-col a:hover { color: var(--text); }
+
     .foot-bottom {
+
       border-top: 1px solid var(--border);
+
       padding-top: 26px;
+
       max-width: 1200px;
+
       margin: 0 auto;
+
       font-size: 13px;
+
       color: rgba(255,255,255,0.3);
+
       display: flex; align-items: center; justify-content: space-between;
+
       gap: 16px; flex-wrap: wrap;
+
     }
+
     .foot-legal { display: flex; gap: 24px; }
+
     .foot-legal a { color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+
     .foot-legal a:hover { color: var(--text); }
 
+
+
     /* ── REVEAL ── */
+
     .reveal {
+
       opacity: 0;
+
       transform: translateY(28px);
+
       transition: opacity 0.7s ease, transform 0.7s ease;
+
     }
+
     .reveal.up { opacity: 1; transform: none; }
+
     .delay-1 { transition-delay: 0.12s; }
+
     .delay-2 { transition-delay: 0.24s; }
 
+
+
     /* ── MOBILE ── */
+
     @media (max-width: 960px) {
+
       nav { padding: 0 24px; }
+
       .nav-links a:not(.btn) { display: none; }
+
       .hero { padding: 110px 20px 70px; min-height: 92vh; }
+
       .hero-orb { width: 220px; height: 220px; margin-bottom: 8px; }
+
       .orb-logo { width: 200px; }
+
       .badge-float { display: none; }
+
       h1 { font-size: clamp(44px, 11vw, 60px); }
+
       .stats-bar { grid-template-columns: 1fr 1fr; }
+
       .stat { padding: 28px 24px; }
+
       .stat:nth-child(2) { border-right: none; }
+
       .stat:nth-child(3) { grid-column: span 2; border-top: 1px solid var(--border); border-right: none; }
+
       .sec { padding: 80px 24px; }
+
       .svc-grid, .work-grid, .steps-grid { grid-template-columns: 1fr; max-width: 100%; }
+
       .svc { padding: 36px 28px; }
+
       .work-placeholder { display: none; }
+
       .cta-sec { padding: 100px 24px; }
+
       .site-footer { padding: 56px 24px 32px; }
+
       .foot-grid { grid-template-columns: 1fr; gap: 36px; }
+
     }
+
+  
+    .work-feature-img video.work-feature-video{display:block;width:100%;height:100%;object-fit:cover;border:0;}
   </style>
+
 </head>
+
 <body>
 
+
+
   <!-- Animated background -->
+
   <div class="bg-canvas">
+
     <div class="bg-blob bg-blob-1"></div>
+
     <div class="bg-blob bg-blob-2"></div>
+
     <div class="bg-blob bg-blob-3"></div>
+
   </div>
+
   <div class="bg-grid"></div>
 
+
+
   <!-- NAV -->
+
   <nav>
+
     <a href="index.html" class="nav-logo">
+
       <div class="logo-badge">
+
         <img src="assets/logo-final.png" alt="Alto Digital">
+
       </div>
+
       <div class="logo-wordmark">
+
         ALTO
+
         <span>DIGITAL</span>
+
       </div>
+
     </a>
+
     <div class="nav-links">
+
       <a href="#work">Work</a>
+
       <a href="#services">Services</a>
+
       <a href="#how">How It Works</a>
+
       <a href="contact.html">Contact</a>
+
       <a href="#book" class="btn btn-primary">Book a Free Demo</a>
+
     </div>
+
   </nav>
 
+
+
   <!-- HERO -->
+
   <section class="hero">
+
     <canvas id="hero-spiral"></canvas>
 
+
+
     <div class="hero-content">
+
       <div class="hero-eyebrow">
+
         <div class="hero-eyebrow-dot"></div>
+
         Digital Growth Partner &middot; Local Service Businesses
+
       </div>
+
       <h1>Built for local.<br>Built to <span class="grad">convert.</span></h1>
+
       <p class="hero-sub">We build the digital infrastructure that gets local service businesses found, called, and booked.</p>
+
       <div class="hero-actions">
+
         <a href="#book" class="btn btn-primary">Book a Free Demo</a>
+
         <a href="#work" class="btn btn-ghost">See Our Work</a>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <!-- LOGO MARQUEE -->
+
   <div class="logos-wrap">
+
     <p class="logos-label">Businesses we've built for</p>
+
     <div class="logos-viewport">
+
       <div class="logos-track">
+
         <!-- set A -->
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5.5 9.7V19h13V9.7"/></svg><span class="brand-name lg-serif">Bluestone Realty</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 18l5-8 4 5 3-4 6 7z"/></svg><span class="brand-name lg-cond-it">Apex Fitness</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M5 19C5 11 11 5 19 5c0 8-6 14-14 14z"/><path d="M6.5 17.5C10 14 13.5 10.5 16.5 8.5"/></svg><span class="brand-name lg-round">Verde Landscaping</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 13c2.5-3 5 3 7.5 0S15.5 10 18 13"/><path d="M3 17c2.5-3 5 3 7.5 0S15.5 14 18 17"/></svg><span class="brand-name lg-geo-caps">Coastal Auto</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v6c0 4-3.5 6.5-8 8-4.5-1.5-8-4-8-8V7z"/></svg><span class="brand-name lg-cond">Ironclad Roofing</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M7 12h10"/></svg><span class="brand-name lg-geo">Northwind HVAC</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M12 21V9"/><path d="M12 9C8.8 9 7.5 6 7.5 3.5 10.7 3.5 12 6.5 12 9z"/><path d="M12 9c3.2 0 4.5-3 4.5-5.5C13.3 3.5 12 6.5 12 9z"/></svg><span class="brand-name lg-round">Maple &amp; Co.</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M7 3v6a2 2 0 004 0V3M9 11v10"/><path d="M16 3c-1.6 0-2.5 2-2.5 4.5S15 12 16 12v9"/></svg><span class="brand-name lg-serif-it">Harbor &amp; Vine</span></span>
+
         <!-- set A duplicate (seamless loop) -->
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5.5 9.7V19h13V9.7"/></svg><span class="brand-name lg-serif">Bluestone Realty</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 18l5-8 4 5 3-4 6 7z"/></svg><span class="brand-name lg-cond-it">Apex Fitness</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M5 19C5 11 11 5 19 5c0 8-6 14-14 14z"/><path d="M6.5 17.5C10 14 13.5 10.5 16.5 8.5"/></svg><span class="brand-name lg-round">Verde Landscaping</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M3 13c2.5-3 5 3 7.5 0S15.5 10 18 13"/><path d="M3 17c2.5-3 5 3 7.5 0S15.5 14 18 17"/></svg><span class="brand-name lg-geo-caps">Coastal Auto</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v6c0 4-3.5 6.5-8 8-4.5-1.5-8-4-8-8V7z"/></svg><span class="brand-name lg-cond">Ironclad Roofing</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M7 12h10"/></svg><span class="brand-name lg-geo">Northwind HVAC</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M12 21V9"/><path d="M12 9C8.8 9 7.5 6 7.5 3.5 10.7 3.5 12 6.5 12 9z"/><path d="M12 9c3.2 0 4.5-3 4.5-5.5C13.3 3.5 12 6.5 12 9z"/></svg><span class="brand-name lg-round">Maple &amp; Co.</span></span>
+
         <span class="brand"><svg viewBox="0 0 24 24"><path d="M7 3v6a2 2 0 004 0V3M9 11v10"/><path d="M16 3c-1.6 0-2.5 2-2.5 4.5S15 12 16 12v9"/></svg><span class="brand-name lg-serif-it">Harbor &amp; Vine</span></span>
+
       </div>
+
     </div>
+
   </div>
 
+
+
   <!-- GUIDED BOOKING -->
+
   <section class="book-sec" id="book">
+
     <div class="book-head reveal">
+
       <h2>Book your free demo.</h2>
+
       <p>A few quick questions, then pick a time. Takes about 30 seconds.</p>
+
     </div>
+
     <div class="book-card reveal">
+
       <div class="book-progress">
+
         <span id="book-step-label">Step 1 of 4</span>
+
         <div class="book-bar"><div class="book-bar-fill" id="book-bar"></div></div>
+
       </div>
+
+
 
       <div class="book-q" data-step="1">
+
         <label class="book-qlabel" for="bk-email">What's your email?</label>
+
         <input type="email" id="bk-email" class="book-input" placeholder="jane@yourbusiness.com" autocomplete="email">
+
         <p class="book-hint">I'll send your demo details here. Free 15-minute demo, no pressure, no pitch.</p>
+
         <div class="book-actions"><button type="button" class="btn btn-primary book-next">Next &rarr;</button></div>
+
       </div>
+
+
 
       <div class="book-q" data-step="2" hidden>
+
         <label class="book-qlabel" for="bk-name">And your name?</label>
+
         <input type="text" id="bk-name" class="book-input" placeholder="Jane Smith" autocomplete="name">
+
         <div class="book-actions"><button type="button" class="book-back2">&larr; Back</button><button type="button" class="btn btn-primary book-next">Next &rarr;</button></div>
+
       </div>
+
+
 
       <div class="book-q" data-step="3" hidden>
+
         <label class="book-qlabel" for="bk-biz">What's your business? <span class="book-opt-tag">Optional</span></label>
+
         <input type="text" id="bk-biz" class="book-input" placeholder="Your business name">
+
         <div class="book-actions"><button type="button" class="book-back2">&larr; Back</button><button type="button" class="btn btn-primary book-next">Next &rarr;</button><button type="button" class="book-skip">Skip to scheduling</button></div>
+
       </div>
+
+
 
       <div class="book-q" data-step="4" hidden>
+
         <label class="book-qlabel">What do you need? <span class="book-opt-tag">Optional</span></label>
+
         <div class="book-opts">
+
           <button type="button" class="book-opt" data-val="Website">Website</button>
+
           <button type="button" class="book-opt" data-val="Local SEO &amp; Google">Local SEO &amp; Google</button>
+
           <button type="button" class="book-opt" data-val="Website + SEO">Website + SEO</button>
+
           <button type="button" class="book-opt" data-val="Not sure yet">Not sure yet</button>
+
         </div>
+
         <div class="book-actions"><button type="button" class="book-back2">&larr; Back</button><button type="button" class="book-skip">Skip to scheduling</button></div>
+
       </div>
+
+
 
       <div class="book-q" data-step="5" hidden>
+
         <div class="book-done">
+
           <div class="book-done-title" id="book-done-title">You're set.</div>
+
           <p class="book-done-sub">Grab a time that works for you. I'll come prepared.</p>
+
           <a class="btn btn-primary book-open" id="book-open" href="https://calendly.com/altodigital/alto-digital-meeting?hide_gdpr_banner=1" target="_blank" rel="noopener">Pick a time &rarr;</a>
+
           <button type="button" class="book-back2">&larr; Back</button>
+
         </div>
+
       </div>
+
     </div>
+
+
 
     <!-- hidden Netlify form: captures the lead even if they never pick a time -->
+
     <form name="booking-lead" data-netlify="true" netlify-honeypot="bot-field" hidden>
+
       <input type="email" name="email">
+
       <input type="text" name="name">
+
       <input type="text" name="business">
+
       <input type="text" name="need">
+
       <input name="bot-field">
+
     </form>
+
   </section>
+
+
 
   <!-- SERVICES -->
+
   <section class="sec" id="services">
+
     <h2>Everything your business<br>needs to win online.</h2>
+
     <p class="sec-sub">No bloated packages. Everything we do is built around a single goal: more leads for your local business.</p>
+
     <div class="svc-list reveal">
+
       <div class="svc-row">
+
         <div class="svc-row-num">01</div>
+
         <div class="svc-row-body">
+
           <h3 class="svc-row-title">Website Design &amp; Development</h3>
+
           <p class="svc-row-desc">A fast, professional website built to convert local visitors into leads. Not a template, not a builder. A real lead generation machine, built from the ground up.</p>
+
         </div>
+
       </div>
+
       <div class="svc-row">
+
         <div class="svc-row-num">02</div>
+
         <div class="svc-row-body">
+
           <h3 class="svc-row-title">Local SEO &amp; GBP Optimization</h3>
+
           <p class="svc-row-desc">Google Business Profile and search optimization so you rank where it matters: Google Search, Maps, and the AI platforms where your next customer is already looking.</p>
+
         </div>
+
       </div>
+
       <div class="svc-row">
+
         <div class="svc-row-num">03</div>
+
         <div class="svc-row-body">
+
           <h3 class="svc-row-title">Lead Generation Systems</h3>
+
           <p class="svc-row-desc">The full infrastructure that turns visitors into booked jobs: optimized conversion flows, review generation, and the systems that keep leads coming in automatically.</p>
+
         </div>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <!-- HOW IT WORKS -->
+
   <section class="sec" id="how">
+
     <h2>Three steps.<br>Real results.</h2>
+
     <p class="sec-sub">From the first call to leads landing in your inbox. Here's exactly how it goes.</p>
+
     <div class="steps-grid reveal">
+
       <div class="step">
+
         <div class="step-line"></div>
+
         <div class="step-num">01</div>
+
         <div class="step-title">We build<br>your system</div>
+
         <p class="step-desc">We start with a fast, professionally designed website built from scratch. No templates, no page builders. Clear service pages, location-optimized copy, and a layout engineered to convert visitors into leads.</p>
+
       </div>
+
       <div class="step">
+
         <div class="step-line"></div>
+
         <div class="step-num">02</div>
+
         <div class="step-title">We get<br>you found</div>
+
         <p class="step-desc">Google Business Profile, on-site SEO, local citations, and the structured data that gets you ranking on Google Search, Maps, and the AI platforms where your next customer is already looking.</p>
+
       </div>
+
       <div class="step">
+
         <div class="step-line"></div>
+
         <div class="step-num">03</div>
+
         <div class="step-title">You get<br>leads</div>
+
         <p class="step-desc">The system works while you work. Calls come in. Form submissions land in your inbox. Jobs get booked. And because the infrastructure is right, it compounds over time.</p>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <!-- WORK -->
+
   <section class="sec sec-alt" id="work">
+
     <h2>Real work for<br>real businesses.</h2>
+
     <p class="sec-sub">No templates, no page builders. Real sites for real local businesses, fast and built to convert.</p>
+
     <div class="work-feature reveal">
+
       <a href="portfolio.html" class="work-feature-img">
-        <img src="assets/work/eleanor-farnsworth.png" alt="Eleanor Farnsworth real estate website">
+
+        <video class="work-feature-video" src="assets/work/eleanor-hero.mp4"
+               poster="assets/work/eleanor-poster.jpg"
+               autoplay muted loop playsinline preload="metadata"
+               aria-label="Eleanor Farnsworth real estate website, scroll-driven hero"></video>
+
       </a>
+
       <div class="work-feature-body">
+
         <span class="work-badge">Live</span>
+
         <h3 class="work-feature-title">Eleanor Farnsworth</h3>
+
         <p class="work-feature-meta">Real Estate &nbsp;&bull;&nbsp; New Orleans, LA</p>
+
         <p class="work-feature-desc">A luxury real estate site with individual property pages, full photo galleries, an area-filtered listings archive, and a recorded sales history. Fast, mobile-first, and built to make eight-figure listings feel the part.</p>
+
         <a href="portfolio.html" class="work-feature-link">See the work &rarr;</a>
+
       </div>
+
     </div>
+
   </section>
 
+
+
   <!-- FOOTER -->
+
   <footer class="site-footer">
+
     <div class="foot-grid">
+
       <div class="foot-brand">
+
         <div class="foot-logo">
+
           <div class="foot-logo-badge"><img src="assets/logo-final.png" alt="Alto Digital"></div>
+
           <span class="foot-word">ALTO<span>DIGITAL</span></span>
+
         </div>
+
         <p class="foot-tagline">Digital growth partner for local service businesses. Websites, SEO, and lead generation systems that actually work.</p>
+
       </div>
+
       <div class="foot-col">
+
         <div class="foot-h">Navigation</div>
+
         <a href="#work">Work</a>
+
         <a href="#services">Services</a>
+
         <a href="#how">How It Works</a>
+
         <a href="contact.html">Contact</a>
+
       </div>
+
       <div class="foot-col">
+
         <div class="foot-h">Contact</div>
+
         <a href="mailto:altodigital@gmail.com">altodigital@gmail.com</a>
+
         <a href="tel:4702613445">470-261-3445</a>
+
         <a href="https://calendly.com/altodigital/alto-digital-meeting" target="_blank" rel="noopener" onclick="if(window.Calendly){Calendly.initPopupWidget({url:this.href});return false;}">Book a free demo</a>
+
       </div>
+
     </div>
+
     <div class="foot-bottom">
+
       <span>&copy; 2026 Alto Digital. All rights reserved.</span>
+
       <span class="foot-legal">
+
         <a href="privacy.html">Privacy Policy</a>
+
         <a href="terms.html">Terms of Service</a>
+
       </span>
+
     </div>
+
   </footer>
 
+
+
   <script>
+
     // Scroll reveal
+
     const obs = new IntersectionObserver(entries => {
+
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('up'); obs.unobserve(e.target); } });
+
     }, { threshold: 0.06 });
+
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
+
+
     // Animated counters
+
     function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
     function animateCount(el) {
+
       const target = +el.dataset.target;
+
       const dur = 1800;
+
       const start = performance.now();
+
       const step = now => {
+
         const p = Math.min((now - start) / dur, 1);
+
         el.textContent = Math.floor(easeOut(p) * target);
+
         if (p < 1) requestAnimationFrame(step);
+
         else el.textContent = target;
+
       };
+
       requestAnimationFrame(step);
+
     }
 
+
+
     const countObs = new IntersectionObserver(entries => {
+
       entries.forEach(e => {
+
         if (e.isIntersecting) {
+
           e.target.querySelectorAll('.count').forEach(animateCount);
+
           countObs.unobserve(e.target);
+
         }
+
       });
+
     }, { threshold: 0.3 });
+
     document.querySelectorAll('.stats-bar').forEach(el => countObs.observe(el));
+
   </script>
 
+
+
   <script>
+
     // Hero spiral animation (vanilla canvas port, brand-tinted)
+
     (function () {
+
       const canvas = document.getElementById('hero-spiral');
+
       if (!canvas) return;
+
       const ctx = canvas.getContext('2d');
+
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+
+
       const BG = '#050810';
+
       const changeEventTime = 0.32;
+
       const cameraZ = -400;
+
       const cameraTravelDistance = 3400;
+
       const startDotYOffset = 28;
+
       const viewZoom = 100;
+
       const NUM_STARS = 3800;
+
       const TRAIL = 80;
+
       const LOOP_MS = 15000;
 
+
+
       let w, h, dpr, time = 0;
+
       const stars = [];
 
+
+
       const clamp = (v, mn, mx) => Math.min(Math.max(v, mn), mx);
+
       const lerp = (a, b, t) => a * (1 - t) + b * t;
+
       const map = (v, a, b, c, d) => c + (d - c) * ((v - a) / (b - a));
+
       const rnd = (a, b) => a + Math.random() * (b - a);
+
       const ease = (p, g) => p < 0.5 ? 0.5 * Math.pow(2 * p, g) : 1 - 0.5 * Math.pow(2 * (1 - p), g);
+
       function easeOutElastic(x) {
+
         const c4 = (2 * Math.PI) / 4.5;
+
         if (x <= 0) return 0; if (x >= 1) return 1;
+
         return Math.pow(2, -8 * x) * Math.sin((x * 8 - 0.75) * c4) + 1;
+
       }
+
+
 
       function spiralPath(p) {
+
         p = clamp(1.2 * p, 0, 1);
+
         p = ease(p, 1.8);
+
         const theta = 2 * Math.PI * 6 * Math.sqrt(p);
+
         const r = 170 * Math.sqrt(p);
+
         return { x: r * Math.cos(theta), y: r * Math.sin(theta) + startDotYOffset };
+
       }
+
+
 
       function rotatePt(v1, v2, p, orientation) {
+
         const mx = (v1.x + v2.x) / 2, my = (v1.y + v2.y) / 2;
+
         const dx = v1.x - mx, dy = v1.y - my;
+
         const angle = Math.atan2(dy, dx);
+
         const o = orientation ? -1 : 1;
+
         const r = Math.sqrt(dx * dx + dy * dy);
+
         const bounce = Math.sin(p * Math.PI) * 0.05 * (1 - p);
+
         return {
+
           x: mx + r * (1 + bounce) * Math.cos(angle + o * Math.PI * easeOutElastic(p)),
+
           y: my + r * (1 + bounce) * Math.sin(angle + o * Math.PI * easeOutElastic(p))
+
         };
+
       }
+
+
 
       function showProjectedDot(pos, sizeFactor) {
+
         const t2 = clamp(map(time, changeEventTime, 1, 0, 1), 0, 1);
+
         const newCamZ = cameraZ + ease(Math.pow(t2, 1.2), 1.8) * cameraTravelDistance;
+
         if (pos.z > newCamZ) {
+
           const depth = pos.z - newCamZ;
+
           const sw = 400 * sizeFactor / depth;
+
           ctx.beginPath();
+
           ctx.arc(viewZoom * pos.x / depth, viewZoom * pos.y / depth, clamp(sw * 0.5, 0.45, 2.6), 0, Math.PI * 2);
+
           ctx.fill();
+
         }
+
       }
+
+
 
       function makeStar() {
+
         const angle = Math.random() * Math.PI * 2;
+
         const distance = 30 * Math.random() + 15;
+
         const spiralLocation = (1 - Math.pow(1 - Math.random(), 3.0)) / 1.3;
+
         let z = rnd(0.5 * cameraZ, cameraTravelDistance + cameraZ);
+
         z = lerp(z, cameraTravelDistance / 2, 0.3 * spiralLocation);
+
         return {
+
           angle, distance,
+
           rotationDirection: Math.random() > 0.5 ? 1 : -1,
+
           expansionRate: 1.2 + Math.random() * 0.8,
+
           finalScale: 0.7 + Math.random() * 0.6,
+
           dx: distance * Math.cos(angle),
+
           dy: distance * Math.sin(angle),
+
           spiralLocation, z,
+
           strokeWeightFactor: Math.pow(Math.random(), 2.0),
+
           blue: Math.random() < 0.22
+
         };
+
       }
+
+
 
       function renderStar(s, p) {
+
         const q = p - s.spiralLocation;
+
         if (q <= 0) return;
+
         const sp = spiralPath(s.spiralLocation);
+
         const dp = clamp(4 * q, 0, 1);
+
         let sx, sy;
+
         if (dp < 0.3) {
+
           const e = lerp(dp, Math.pow(dp, 2), dp / 0.3);
+
           sx = lerp(sp.x, sp.x + s.dx * 0.3, e / 0.3);
+
           sy = lerp(sp.y, sp.y + s.dy * 0.3, e / 0.3);
+
         } else if (dp < 0.7) {
+
           const mp = (dp - 0.3) / 0.4;
+
           const curve = Math.sin(mp * Math.PI) * s.rotationDirection * 1.5;
+
           const baseX = sp.x + s.dx * 0.3, baseY = sp.y + s.dy * 0.3;
+
           const targetX = sp.x + s.dx * 0.7, targetY = sp.y + s.dy * 0.7;
+
           sx = lerp(baseX, targetX, mp) + (-s.dy * 0.4 * curve) * mp;
+
           sy = lerp(baseY, targetY, mp) + (s.dx * 0.4 * curve) * mp;
+
         } else {
+
           const fp = (dp - 0.7) / 0.3;
+
           const baseX = sp.x + s.dx * 0.7, baseY = sp.y + s.dy * 0.7;
+
           const td = s.distance * s.expansionRate * 1.5;
+
           const sa = s.angle + 1.2 * s.rotationDirection * fp * Math.PI;
+
           sx = lerp(baseX, sp.x + td * Math.cos(sa), fp);
+
           sy = lerp(baseY, sp.y + td * Math.sin(sa), fp);
+
         }
+
         const vx = (s.z - cameraZ) * sx / viewZoom;
+
         const vy = (s.z - cameraZ) * sy / viewZoom;
+
         let sizeMul = dp < 0.6 ? 1.0 + dp * 0.2 : lerp(1.2, s.finalScale, (dp - 0.6) / 0.4);
+
         ctx.fillStyle = s.blue ? 'rgba(120,170,255,1)' : '#fff';
+
         showProjectedDot({ x: vx, y: vy, z: s.z }, 8.5 * s.strokeWeightFactor * sizeMul);
+
       }
+
+
 
       function drawTrail(t1) {
+
         for (let i = 0; i < TRAIL; i++) {
+
           const f = map(i, 0, TRAIL, 1.1, 0.1);
+
           const sw = (1.3 * (1 - t1) + 3.0 * Math.sin(Math.PI * t1)) * f;
+
           ctx.fillStyle = '#fff';
+
           ctx.lineWidth = sw;
+
           const pos = spiralPath(t1 - 0.00015 * i);
+
           const rot = rotatePt(pos, { x: pos.x + 5, y: pos.y + 5 }, Math.sin(time * Math.PI * 2) * 0.5 + 0.5, i % 2 === 0);
+
           ctx.beginPath();
+
           ctx.arc(rot.x, rot.y, sw / 2, 0, Math.PI * 2);
+
           ctx.fill();
+
         }
+
       }
+
+
 
       function render(extraRot, bob, sc) {
+
         ctx.fillStyle = BG;
+
         ctx.fillRect(0, 0, w, h);
+
         ctx.save();
+
         ctx.translate(w / 2, h / 2 + (bob || 0));
+
         if (sc) ctx.scale(sc, sc);
+
         const t1 = clamp(map(time, 0, changeEventTime + 0.25, 0, 1), 0, 1);
+
         const t2 = clamp(map(time, changeEventTime, 1, 0, 1), 0, 1);
+
         ctx.rotate(-Math.PI * ease(t2, 2.7) + (extraRot || 0));
+
         drawTrail(t1);
+
         ctx.fillStyle = '#fff';
+
         for (const s of stars) renderStar(s, t1);
+
         if (time > changeEventTime) {
+
           showProjectedDot({ x: 0, y: cameraZ * startDotYOffset / viewZoom, z: cameraTravelDistance }, 2.5);
+
         }
+
         ctx.restore();
+
       }
+
+
 
       function resize() {
+
         dpr = Math.min(window.devicePixelRatio || 1, 2);
+
         const rect = canvas.getBoundingClientRect();
+
         w = rect.width; h = rect.height;
+
         canvas.width = w * dpr; canvas.height = h * dpr;
+
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
         render();   // redraw current frame (matters after the intro has settled)
+
       }
+
+
 
       // Play the spiral formation ONCE, then let the particles drift gently (no re-loop).
+
       const DURATION = 8000;   // length of the one-time intro
+
       const TARGET = 0.62;     // formed-spiral frame the intro settles on
+
       const start = performance.now();
+
       let phase = 'intro';
+
       let aRot = 0;
+
       function loop(now) {
+
         if (phase === 'intro') {
+
           const prog = Math.min((now - start) / DURATION, 1);
+
           time = (1 - Math.pow(1 - prog, 3)) * TARGET;  // easeOutCubic settle
+
           render();
+
           if (prog >= 1) phase = 'ambient';
+
         } else {
+
           aRot += 0.0005;                                 // slow rotational drift
+
           const bob = Math.sin(now * 0.0004) * 9;         // gentle vertical float
+
           const sc = 1 + Math.sin(now * 0.0006) * 0.018;  // subtle breathing
+
           render(aRot, bob, sc);
+
         }
+
         if (!reduce) requestAnimationFrame(loop);
+
       }
+
+
 
       window.addEventListener('resize', resize);
+
       resize();
+
       for (let i = 0; i < NUM_STARS; i++) stars.push(makeStar());
+
       if (reduce) { time = TARGET; render(); }
+
       else requestAnimationFrame(loop);
+
     })();
+
   </script>
 
+
+
   <script>
+
     // Guided booking: one question at a time, then open Calendly prefilled
+
     (function () {
+
       const sec = document.getElementById('book');
+
       if (!sec) return;
+
       const qs = Array.from(sec.querySelectorAll('.book-q'));
+
       const label = document.getElementById('book-step-label');
+
       const bar = document.getElementById('book-bar');
+
       const total = qs.length - 1;            // last step is the confirmation
+
       let step = 1;
+
       let captured = false;
+
       const answers = { email: '', name: '', biz: '', need: '' };
 
+
+
       function show(n) {
+
         n = Math.max(1, Math.min(n, qs.length));
+
         qs.forEach(q => { q.hidden = (+q.dataset.step !== n); });
+
         step = n;
+
         if (n <= total) {
+
           label.textContent = 'Step ' + n + ' of ' + total;
+
           bar.style.width = (n / total * 100) + '%';
+
         } else {
+
           label.textContent = 'All set';
+
           bar.style.width = '100%';
+
         }
+
         const active = qs.find(q => +q.dataset.step === n);
+
         const inp = active && active.querySelector('.book-input');
+
         if (inp) setTimeout(() => inp.focus(), 60);
+
       }
+
+
 
       function store(n) {
+
         if (n === 1) { const v = document.getElementById('bk-email').value.trim(); if (!/.+@.+\..+/.test(v)) return bad('bk-email'); answers.email = v; }
+
         if (n === 2) { const v = document.getElementById('bk-name').value.trim(); if (!v) return bad('bk-name'); answers.name = v.replace(/\s+/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); }
+
         if (n === 3) { answers.biz = document.getElementById('bk-biz').value.trim(); }
+
         return true;
+
       }
+
       function bad(id) { const el = document.getElementById(id); el.style.borderColor = '#ef4444'; el.focus(); return false; }
 
+
+
       // fire once we have the email + name, so a partial visitor is still a lead
+
       function captureLead() {
+
         if (captured || !answers.email) return;
+
         captured = true;
+
         const body = new URLSearchParams({
+
           'form-name': 'booking-lead',
+
           email: answers.email, name: answers.name, business: answers.biz, need: answers.need
+
         });
+
         fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() }).catch(() => {});
+
       }
+
+
 
       function goDone() {
+
         document.getElementById('book-done-title').textContent = answers.name ? ("You're set, " + answers.name + ".") : "You're set.";
+
         captureLead();
+
         show(5);
+
       }
 
+
+
       sec.querySelectorAll('.book-next').forEach(b => b.addEventListener('click', () => { if (store(step)) show(step + 1); }));
+
       sec.querySelectorAll('.book-back2').forEach(b => b.addEventListener('click', () => show(step - 1)));
+
       sec.querySelectorAll('.book-skip').forEach(b => b.addEventListener('click', goDone));
+
       sec.querySelectorAll('.book-input').forEach(inp => {
+
         inp.addEventListener('input', () => { inp.style.borderColor = ''; });
+
         inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (store(step)) show(step + 1); } });
+
       });
+
       sec.querySelectorAll('.book-opt').forEach(b => b.addEventListener('click', () => { answers.need = b.dataset.val; goDone(); }));
+
       document.getElementById('book-open').addEventListener('click', (e) => {
+
         if (!window.Calendly) return;   // script not ready/blocked: let the link open Calendly in a new tab
+
         e.preventDefault();
+
         // a1/a2/a3 map to Calendly's custom questions BY POSITION:
+
         //   a1 = "What's your business called?"
+
         //   a2 = "Do you have a website right now?"  (asked in Calendly, not here)
+
         //   a3 = "What do you want to fix first?"
+
         // Reordering the questions in Calendly breaks this mapping. Radio
+
         // answers only prefill when the string matches an option exactly.
+
         Calendly.initPopupWidget({
+
           url: 'https://calendly.com/altodigital/alto-digital-meeting?hide_gdpr_banner=1',
+
           prefill: {
+
             name: answers.name,
+
             email: answers.email,
+
             customAnswers: { a1: answers.biz, a3: answers.need }
+
           }
+
         });
+
       });
+
+
 
       show(1);
+
     })();
+
   </script>
+
+
 
   <script>
+
     // Custom cursor ring (lags behind pointer, expands over interactive elements)
+
     (function () {
+
       if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+
       const ring = document.createElement('div');
+
       ring.className = 'cursor-ring';
+
       document.body.appendChild(ring);
+
       let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
+
       document.addEventListener('mousemove', e => {
+
         mx = e.clientX; my = e.clientY;
+
         ring.classList.add('show');
+
       });
+
       document.addEventListener('mouseleave', () => ring.classList.remove('show'));
+
       const interactive = 'a, button, .btn, input, textarea, select, [role="button"]';
+
       document.addEventListener('mouseover', e => {
+
         if (e.target.closest(interactive)) ring.classList.add('hovering');
+
       });
+
       document.addEventListener('mouseout', e => {
+
         if (e.target.closest(interactive)) ring.classList.remove('hovering');
+
       });
+
       (function loop() {
+
         rx += (mx - rx) * 0.18;
+
         ry += (my - ry) * 0.18;
+
         ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%)';
+
         requestAnimationFrame(loop);
+
       })();
+
     })();
+
   </script>
 
+
+
+
+  <script>
+    // Respect reduced-motion: hold the hero on its poster frame instead of looping.
+    (function () {
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      document.querySelectorAll('video.work-feature-video').forEach(function (v) {
+        v.autoplay = false; v.removeAttribute('autoplay'); v.loop = false; v.pause();
+      });
+    })();
+  </script>
 </body>
+
 </html>
+
